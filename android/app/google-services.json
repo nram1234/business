@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "222849484002",
+    "firebase_url": "https://business-fb699.firebaseio.com",
+    "project_id": "business-fb699",
+    "storage_bucket": "business-fb699.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222849484002:android:6f615f87c2b54f85",
+        "android_client_info": {
+          "package_name": "com.nram.business"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222849484002-jshuufpp067oqq1g8eq2amk3eal5f79e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nram.business",
+            "certificate_hash": "8bbf85006711bf7bfce95a1b473987f900813f7e"
+          }
+        },
+        {
+          "client_id": "222849484002-vpothd3op5u4kt2b9ruv2mbvv0d2kvu7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASdHGYKDwOLevikOX0Lg-QpAsFSA7SA34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222849484002-vpothd3op5u4kt2b9ruv2mbvv0d2kvu7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
