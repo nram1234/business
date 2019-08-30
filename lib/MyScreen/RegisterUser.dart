@@ -1,5 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:business/Validation//ValidationData.dart';
+import 'package:firebase_ui/flutter_firebase_ui.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+
+
+
 class RegisterUser extends StatefulWidget {
   @override
   _RegisterUserState createState() => _RegisterUserState();
@@ -7,11 +15,26 @@ class RegisterUser extends StatefulWidget {
 
 class _RegisterUserState extends State<RegisterUser> with ValidationData{
   final formkey = GlobalKey<FormState>();
-
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  StreamSubscription<FirebaseUser> _listener;
+  FirebaseUser _currentUser;
   String email;
   String password;
   String password2;
+  @override
+  void initState() {
+    super.initState();
 
+    _checkCurrentUser();
+    if(_currentUser != null){
+     // Navigator.of(context).pushNamed('MyHomePage');
+    }
+  }
+
+  @override
+  void dispose() {
+    _listener.cancel();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +107,7 @@ class _RegisterUserState extends State<RegisterUser> with ValidationData{
                           if (password == password2) {
 
                           } else {
-                            
+
                           }
                         }
                       }),
@@ -116,11 +139,39 @@ class _RegisterUserState extends State<RegisterUser> with ValidationData{
                       ],
                     ),
                   ),
-
+                  Container(
+                    height: 100,
+                    child: SignInScreen(
+                      showBar: false,
+                      avoidBottomInset: false,
+                      bottomPadding: 0,
+                      horizontalPadding: 0,
+                      providers: [ProvidersTypes.google],
+                      twitterConsumerSecret:'',twitterConsumerKey: '',),
+                  ),  Container(
+                    height: 100,
+                    child: SignInScreen(
+                      showBar: false,
+                      avoidBottomInset: false,
+                      bottomPadding: 0,
+                      horizontalPadding: 0,
+                      providers: [ProvidersTypes.facebook],
+                      twitterConsumerSecret:'',twitterConsumerKey: '',),
+                  )
                 ],
               ),
             )),
       ),
     );
+  }
+  void _checkCurrentUser() async {
+    _currentUser = await _auth.currentUser();
+    _currentUser?.getIdToken(refresh: true);
+    _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
+      setState(() {
+       // Navigator.of(context).pushNamed('MyHomePage');
+        _currentUser = user;
+      });
+    });
   }
 }

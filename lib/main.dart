@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_ui/flutter_firebase_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'MyScreen/RegisterUser.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -13,17 +15,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+     // home: MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute:  'RegisterUser'//'MyHomePage'
+      ,routes: {
+      'MyHomePage':(context)=>MyHomePage(),
+      //'SignInPage':(context)=>SignInPage(),
+      'RegisterUser':(context)=>RegisterUser(),
+      //'MyHomePage':(context)=>MyHomePage(),
+
+    },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key  }) : super(key: key);
 
-  final String title;
+
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -64,22 +74,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                height: 100,
-                child: SignInScreen(
-                  showBar: false,
-                  avoidBottomInset: false,
-                  bottomPadding: 0,
-                  horizontalPadding: 0,
-                  providers: [ProvidersTypes.google],
-                  twitterConsumerSecret:'',twitterConsumerKey: '',),
-              )
+              Text('kk')
+
+              ,RaisedButton(onPressed: (){
+                _auth.signOut();
+              })
             ],
           ),
         ),
