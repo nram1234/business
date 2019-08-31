@@ -105,12 +105,14 @@ class _RegisterUserState extends State<RegisterUser> with ValidationData{
                           formkey.currentState.save();
                           //se you you ahve this eamil befor
                           if (password == password2) {
-
+_auth.createUserWithEmailAndPassword(email: email, password: password).then((v){
+  Navigator.of(context).pushNamed('MyHomePage');
+});
                           } else {
 
                           }
                         }
-                      }),
+                      }),RaisedButton(onPressed: (){_auth.signOut();}),
                   Container(
                     margin: EdgeInsets.only(top: 16),
                     child: Row(
@@ -166,12 +168,16 @@ class _RegisterUserState extends State<RegisterUser> with ValidationData{
   }
   void _checkCurrentUser() async {
     _currentUser = await _auth.currentUser();
+    if(_currentUser == null){}
     _currentUser?.getIdToken(refresh: true);
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
-      setState(() {
+      if(user == null){}else{
+        Navigator.of(context).pushNamed('MyHomePage');
+      }
+    //  setState(() {
        // Navigator.of(context).pushNamed('MyHomePage');
         _currentUser = user;
-      });
+    //  });
     });
   }
 }

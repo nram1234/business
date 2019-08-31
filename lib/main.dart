@@ -73,14 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-
-        ),
+       
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text('kk')
+              Text(is_register_user?_currentUser.email:'not have user')
 
               ,RaisedButton(onPressed: (){
                 _auth.signOut();
@@ -154,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _checkCurrentUser() async {
     _currentUser = await _auth.currentUser();
+
     _currentUser?.getIdToken(refresh: true);
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
       setState(() {
