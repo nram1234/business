@@ -17,40 +17,53 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-     // home: MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute:  'RegisterUser'//'MyHomePage'
-      ,routes: {
-      'MyHomePage':(context)=>MyHomePage(),
-      //'SignInPage':(context)=>SignInPage(),
-      'RegisterUser':(context)=>RegisterUser(),
-      //'MyHomePage':(context)=>MyHomePage(),
-
-    },
+      // home: MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: 'MyHomePage',
+      routes: {
+        'MyHomePage': (context) => MyHomePage(),
+        //'SignInPage':(context)=>SignInPage(),
+        'RegisterUser': (context) => RegisterUser(),
+        //'MyHomePage':(context)=>MyHomePage(),
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key  }) : super(key: key);
-
-
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+enum widgetpage { Home, Favorite, Profile, Add_Me }
+
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin<MyHomePage> {
+  AnimationController _controller;
+  Animation _animation;
+
   FirebaseAuth _auth = FirebaseAuth.instance;
   StreamSubscription<FirebaseUser> _listener;
   FirebaseUser _currentUser;
-  bool is_register_user =false ;
+  bool is_register_user = false;
+
+  widgetpage selectpage = widgetpage.Home;
 
   @override
   void initState() {
     super.initState();
 
-      _checkCurrentUser();
+    _checkCurrentUser();
+    _controller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2000));
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+  }
 
+  //animation of page
+  _playAnimation() {
+    _controller.reset();
+    _controller.forward();
   }
 
   @override
@@ -60,34 +73,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if(_currentUser == null){
-      is_register_user =false ;
-      print('i get nooooooooooooouser');
-    }else{
-
-      is_register_user =true ;
-      setState(() {
-
-      });
+    if (_currentUser == null) {
+      is_register_user = false;
+    } else {
+      is_register_user = true;
+      setState(() {});
       print('i get user');
     }
 
     return Scaffold(
-       
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(is_register_user?_currentUser.email:'not have user')
-
-              ,RaisedButton(onPressed: (){
+              Container(
+                height: 150,
+                child: ListView.builder(itemCount: 100, itemBuilder: (context,pos){
+                  return ChoiceChip(backgroundColor: Colors.amber,label:Text('uuu') ,avatar: Icon(Icons.access_alarm,size: 100,),);
+                }),
+              ),
+              Text(is_register_user ? _currentUser.email : 'not have user'),
+              RaisedButton(onPressed: () {
                 _auth.signOut();
               })
             ],
           ),
         ),
         bottomNavigationBar:
-        is_register_user ? register_user() : not_register_user());
+            is_register_user ? register_user() : not_register_user());
   }
 
   Widget register_user() {
@@ -159,5 +172,37 @@ class _MyHomePageState extends State<MyHomePage> {
         _currentUser = user;
       });
     });
+  }
+
+  Widget getCustmBadg() {
+    switch (selectpage) {
+      case widgetpage.Home:
+        return FadeTransition(
+          opacity: _animation,
+          child: Container(
+            child: CategoryList(),
+          ),
+        );
+      case widgetpage.Favorite:
+        return FadeTransition(
+          opacity: _animation,
+          child: Container(
+            child: CardList(),
+          ),
+        );
+      case widgetpage.Profile:
+        return FadeTransition(
+          opacity: _animation,
+          child: ProfileLayout(),
+        );
+        break;
+      case widgetpage.Add_Me:
+        return FadeTransition(
+          opacity: _animation,
+          child: RegisterUser(),
+        );
+        break;
+    }
+    return CategoryList();
   }
 }
