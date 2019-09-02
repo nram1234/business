@@ -88,8 +88,11 @@ class _MyHomePageState extends State<MyHomePage>
             children: <Widget>[
               Container(
                 height: 150,
-                child: ListView.builder(itemCount: 100, itemBuilder: (context,pos){
-                  return ChoiceChip(backgroundColor: Colors.amber,label:Text('uuu') ,avatar: Icon(Icons.access_alarm,size: 100,),);
+                child: ListView.builder(scrollDirection: Axis.horizontal,itemCount: 100, itemBuilder: (context,pos){
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(radius: 50,child: Row(children: <Widget>[Icon(Icons.email),Text('jonsgvuisdnuiv ')],),),
+                  );
                 }),
               ),
               Text(is_register_user ? _currentUser.email : 'not have user'),
@@ -180,20 +183,20 @@ class _MyHomePageState extends State<MyHomePage>
         return FadeTransition(
           opacity: _animation,
           child: Container(
-            child: CategoryList(),
+            child:Container(color: Colors.blue,)// CategoryList(),
           ),
         );
       case widgetpage.Favorite:
         return FadeTransition(
           opacity: _animation,
           child: Container(
-            child: CardList(),
+            child:Container(color: Colors.blue,)// CardList(),
           ),
         );
       case widgetpage.Profile:
         return FadeTransition(
           opacity: _animation,
-          child: ProfileLayout(),
+          child:Container(color: Colors.blue,)// ProfileLayout(),
         );
         break;
       case widgetpage.Add_Me:
@@ -203,6 +206,6 @@ class _MyHomePageState extends State<MyHomePage>
         );
         break;
     }
-    return CategoryList();
+    return   Container(color: Colors.blue,);//CategoryList();
   }
 }
