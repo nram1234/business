@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:business/app_Localizations.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/flutter_firebase_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'MyScreen/LayoutEditProfile.dart';
+import 'MyScreen/ListScreen.dart';
 import 'MyScreen/RegisterUser.dart';
 
 void main() => runApp(MyApp());
@@ -17,15 +21,35 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-      // home: MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: 'MyHomePage',
-      routes: {
+     //home:Center(child: Text(Applocalizations.of(context).translate('save')),)// MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: 'MyHomePage'
+     , routes: {
         'MyHomePage': (context) => MyHomePage(),
         //'SignInPage':(context)=>SignInPage(),
         'RegisterUser': (context) => RegisterUser(),
         //'MyHomePage':(context)=>MyHomePage(),
       },
-    );
+      localizationsDelegates: [
+        // ... app-specific localization delegate[s] here
+        Applocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en' ),
+        // English
+        const Locale('ar'  ),
+
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode){
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },);
   }
 }
 
@@ -49,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage>
   bool is_register_user = false;
 
   widgetpage selectpage = widgetpage.Home;
+
 
   @override
   void initState() {
@@ -82,29 +107,21 @@ class _MyHomePageState extends State<MyHomePage>
     }
 
     return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 150,
-                child: ListView.builder(scrollDirection: Axis.horizontal,itemCount: 100, itemBuilder: (context,pos){
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(radius: 50,child: Row(children: <Widget>[Icon(Icons.email),Text('jonsgvuisdnuiv ')],),),
-                  );
-                }),
-              ),
-              Text(is_register_user ? _currentUser.email : 'not have user'),
-              RaisedButton(onPressed: () {
-                _auth.signOut();
-              })
-            ],
-          ),
+        body: FutureBuilder(
+          future: _playAnimation(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return SafeArea(
+              top: true,
+              child:
+              getCustmBadg(),
+
+            );
+          },
         ),
         bottomNavigationBar:
-            is_register_user ? register_user() : not_register_user());
+        is_register_user ? register_user() : not_register_user());
   }
+
 
   Widget register_user() {
     return FancyBottomNavigation(
@@ -114,25 +131,23 @@ class _MyHomePageState extends State<MyHomePage>
         TabData(iconData: Icons.person, title: "Profile")
       ],
       onTabChangedListener: (position) {
-        setState(() {
-          switch (position) {
-            case 0:
-              setState(() {
-                // selectpage = widgetpage.Home;
-              });
-              break;
-            case 1:
-              setState(() {
-                //  selectpage = widgetpage.Favorite;
-              });
-              break;
-            case 2:
-              setState(() {
-                // selectpage = widgetpage.Profile;
-              });
-              break;
-          }
-        });
+        switch (position) {
+          case 0:
+            setState(() {
+              selectpage = widgetpage.Home;
+            });
+            break;
+          case 1:
+            setState(() {
+              selectpage = widgetpage.Favorite;
+            });
+            break;
+          case 2:
+            setState(() {
+              selectpage = widgetpage.Profile;
+            });
+            break;
+        }
       },
     );
   }
@@ -148,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage>
         switch (position) {
           case 0:
             setState(() {
-              //   selectpage = widgetpage.Home;
+              selectpage = widgetpage.Home;
             });
             break;
 //            case 1:
@@ -158,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage>
 //              break;
           case 1:
             setState(() {
-              // selectpage = widgetpage.Add_Me;
+              selectpage = widgetpage.Add_Me;
             });
             break;
         }
@@ -181,22 +196,23 @@ class _MyHomePageState extends State<MyHomePage>
     switch (selectpage) {
       case widgetpage.Home:
         return FadeTransition(
-          opacity: _animation,
-          child: Container(
-            child:Container(color: Colors.blue,)// CategoryList(),
-          ),
+            opacity: _animation,
+            child: Container(child: ListScreen()) // CategoryList(),
+
         );
       case widgetpage.Favorite:
         return FadeTransition(
           opacity: _animation,
           child: Container(
-            child:Container(color: Colors.blue,)// CardList(),
+              child: Container(
+                color: Colors.blue,
+              ) // CardList(),
           ),
         );
       case widgetpage.Profile:
         return FadeTransition(
-          opacity: _animation,
-          child:Container(color: Colors.blue,)// ProfileLayout(),
+            opacity: _animation,
+            child: LayoutEditProfile() // ProfileLayout(),
         );
         break;
       case widgetpage.Add_Me:
@@ -206,6 +222,8 @@ class _MyHomePageState extends State<MyHomePage>
         );
         break;
     }
-    return   Container(color: Colors.blue,);//CategoryList();
+    return Container(
+      color: Colors.blue,
+    ); //CategoryList();
   }
 }
