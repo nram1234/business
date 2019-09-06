@@ -40,7 +40,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                     },
                     validator: username,
                     decoration: InputDecoration(
-                        hintText: Applocalizations.of(context).translate('key_first_name')//'Your Name',
+                        hintText: AppLocalizations.of(context).translate('first_name')//'Your Name',
                         ,prefixIcon: Icon(Icons.person),
                         border:OutlineInputBorder(
                             borderRadius:
@@ -58,7 +58,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                     validator: userphone,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
-                        hintText: 'Your phone',
+                        hintText: AppLocalizations.of(context).translate('mobile'),
                         prefixIcon: Icon(Icons.phone),
                         border: OutlineInputBorder(
                             borderRadius:
@@ -80,7 +80,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: InputDecoration(
-                        hintText: 'Your Addres',
+                        hintText: AppLocalizations.of(context).translate('Address'),
                         prefixIcon: Icon(Icons.place),
                         border: OutlineInputBorder(
                             borderRadius:
@@ -100,7 +100,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                     initialValue: Userdata.Describe,
                     decoration: InputDecoration(
                         isDense: true,
-                        hintText: 'Describe',
+                        hintText:AppLocalizations.of(context).translate('description'),
                         prefixIcon: Icon(Icons.info),
                         border: OutlineInputBorder(
                             borderRadius:
@@ -191,7 +191,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                     ),
                   ),
                 )
-              ,  CupertinoButton( child: Text('Save',style: TextStyle(fontSize: 20),),onPressed: (){},)   ],
+              ,  CupertinoButton( child: Text(AppLocalizations.of(context).translate('save'),style: TextStyle(fontSize: 20),),onPressed: (){},)   ],
             )),
       ),
     );
@@ -242,37 +242,37 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(child: Row(children: <Widget>[Icon(Icons.ac_unit),Text('hhjhjjhjhjjh'),Image.asset("images/gmailogo.jpg",fit: BoxFit.fitHeight,)],),
+              child: Container(child: Row(children: <Widget>[Icon(Icons.ac_unit),Text(AppLocalizations.of(context).translate('Restaurants')),Image.asset("images/gmailogo.jpg",fit: BoxFit.fitHeight,)],),
                 height: 100,
               ),
             ), Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(child: Row(children: <Widget>[Icon(Icons.zoom_out_map),Text('hhjhjjhjhjjh')],),
+              child: Container(child: Row(children: <Widget>[Icon(Icons.zoom_out_map),Text(AppLocalizations.of(context).translate('Personal'))],),
                 height: 100,
               ),
             ),Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(child: Row(children: <Widget>[Icon(Icons.youtube_searched_for),Text('hhjhjjhjhjjh')],),
+              child: Container(child: Row(children: <Widget>[Icon(Icons.youtube_searched_for),Text(AppLocalizations.of(context).translate('Animals'))],),
                 height: 100,
               ),
             ),Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(child: Row(children: <Widget>[Icon(Icons.wc),Text('hhjhjjhjhjjh')],),
+              child: Container(child: Row(children: <Widget>[Icon(Icons.wc),Text(AppLocalizations.of(context).translate('Car'))],),
                 height: 100,
               ),
             ),Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(child: Row(children: <Widget>[Icon(Icons.wb_iridescent),Text('hhjhjjhjhjjh')],),
+              child: Container(child: Row(children: <Widget>[Icon(Icons.wb_iridescent),Text(AppLocalizations.of(context).translate('Shops'))],),
                 height: 100,
               ),
             ),Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(child: Row(children: <Widget>[Icon(Icons.volume_off),Text('hhjhjjhjhjjh')],),
+              child: Container(child: Row(children: <Widget>[Icon(Icons.volume_off),Text(AppLocalizations.of(context).translate('Home'))],),
                 height: 100,
               ),
             ),Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(child: Row(children: <Widget>[Icon(Icons.view_module),Text('hhjhjjhjhjjh')],),
+              child: Container(child: Row(children: <Widget>[Icon(Icons.view_module),Text(AppLocalizations.of(context).translate('Building'))],),
                 height: 100,
               ),
             ) ]),

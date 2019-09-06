@@ -1,0 +1,16 @@
+{
+
+  "first_name": " Name",
+  "mobile": "Mobile Number",
+  "Address": "Address",
+  "description": "description",
+  "save": "save",
+
+  "Building": "Building and construction",
+  "Home": "Home Services",
+  "Personal": "Personal Care",
+  "Animals": "Animals",
+  "Car": "Car service",
+  "Shops": "Shops",
+  "Restaurants":  "Restaurants and cafes"
+}

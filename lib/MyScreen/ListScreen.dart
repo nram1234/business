@@ -1,43 +1,22 @@
 import 'package:business/SpecialWidget/NewExpansionTile.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+
+import '../app_Localizations.dart';
 class ListScreen extends StatefulWidget {
-//  List<String>data;
-//
-//  ListScreen(this.data);
+
 
   @override
   _ListScreenState createState() => _ListScreenState();
 }
 
 class _ListScreenState extends State<ListScreen> {
-  List<String>listna=[ 'Abbott',
-    'wqwqwq',
-    'reer',
-    'tytytg',
-    'jkjkj',
-    'opopoo',
-    'fdgdfgdfgdf',
-    'mnbmbmb',
-    'zazazaz',
-    'xssxsxs',
-    'fvfvfvf',
-    'bgghgbghbg',
-    'kmkmkmkm',
-    'l..ll.',
-    'bmbnmbnmbnm',
-    '1111111111',
-    'xcvxcvxvxcvx',
-    'opopopop',
-    'iuiuiyuyuyu',
-    '898797978977',
-    '54654654654',
-    '2ewecvhcvvbnvbnvb',
-    'Atkinson'];
+  List<String>listna;
   bool _saving = false;
-  List<String>damydata=[];
+  List<dynamic>damydata=[];
   @override
   Widget build(BuildContext context) {
+    listna=[AppLocalizations.of(context).translate('Building'),AppLocalizations.of(context).translate('Home'),AppLocalizations.of(context).translate('Personal'),AppLocalizations.of(context).translate('Animals'),AppLocalizations.of(context).translate('Car'),AppLocalizations.of(context).translate('Shops'),AppLocalizations.of(context).translate('Restaurants')];
     return  Column(children: <Widget>[  Container(
       height: 130,
       child: ListView.builder(    
@@ -63,7 +42,7 @@ class _ListScreenState extends State<ListScreen> {
                         radius: 40,
                         backgroundColor: Colors.deepOrange,
                       )),
-                  Text("joww uvfdhj")
+                  Text(listna[pos])
                 ],
               ),
             );

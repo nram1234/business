@@ -16,40 +16,32 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp(   supportedLocales: [Locale('en'), Locale('ar')],
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],localeResolutionCallback: (locale,supportedLocales){
+        for(var supportedLocale in supportedLocales){
+          if(supportedLocale.languageCode == locale.languageCode&&supportedLocale.countryCode==locale.countryCode){
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-     //home:Center(child: Text(Applocalizations.of(context).translate('save')),)// MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: 'MyHomePage'
+   // home:Center(child: Text(   'uuuu'),)// MyHomePage(title: 'Flutter Demo Home Page'),
+    initialRoute: 'MyHomePage'
      , routes: {
         'MyHomePage': (context) => MyHomePage(),
         //'SignInPage':(context)=>SignInPage(),
         'RegisterUser': (context) => RegisterUser(),
         //'MyHomePage':(context)=>MyHomePage(),
       },
-      localizationsDelegates: [
-        // ... app-specific localization delegate[s] here
-        Applocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en' ),
-        // English
-        const Locale('ar'  ),
-
-      ],
-      localeResolutionCallback: (locale, supportedLocales) {
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale.languageCode &&
-              supportedLocale.countryCode == locale.countryCode){
-            return supportedLocale;
-          }
-        }
-        return supportedLocales.first;
-      },);
+      );
   }
 }
 

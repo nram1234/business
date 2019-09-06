@@ -1,42 +1,36 @@
 import 'dart:async';
 import 'dart:convert';
 
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Applocalizations {
+class AppLocalizations{
   final Locale locale;
 
-  Applocalizations(this.locale);
-
-  static Applocalizations of(BuildContext context) {
-
-    return Localizations.of<Applocalizations>(context, Applocalizations);
+  AppLocalizations(this.locale);
+  static AppLocalizations of(BuildContext context){
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
-static const LocalizationsDelegate<Applocalizations>delegate=_AppLocalizationDelegate();
-
-
-  Map<String, String> _localizedString;
-
-  Future <bool>load() async {
-    String josnString =
-        await rootBundle.loadString('assets/lang/${locale.languageCode}.json');
-    Map<String, dynamic> josnMap = json.decode(josnString);
-    _localizedString = josnMap.map((key, value) {
+  static const LocalizationsDelegate<AppLocalizations>delegate=_AppLocalizationsDelegate();
+  Map<String,String>_localizedStrings;
+  Future<bool>load()async{
+    String jsonString=await rootBundle.loadString('lang/${locale.languageCode}.json');
+    Map<String,dynamic>jsonMap=json.decode(jsonString);
+    _localizedStrings=jsonMap.map((key,value){
       return MapEntry(key, value.toString());
     });
     return true;
   }
-
-  String translate(String key) {
-    return _localizedString[key];
+  String translate(String key){
+    return _localizedStrings[key];
   }
 }
-class _AppLocalizationDelegate
-extends LocalizationsDelegate<Applocalizations>{
 
-const _AppLocalizationDelegate();
 
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations>{
+  const _AppLocalizationsDelegate();
   @override
   bool isSupported(Locale locale) {
     // TODO: implement isSupported
@@ -44,34 +38,19 @@ const _AppLocalizationDelegate();
   }
 
   @override
-  Future<Applocalizations> load(Locale locale)async {
-    Applocalizations  localizations=new Applocalizations(locale);
+  Future<AppLocalizations> load(Locale locale)async {
+    AppLocalizations localizations=new AppLocalizations(locale);
     await localizations.load();
     return localizations;
-
   }
 
   @override
-  bool shouldReload(LocalizationsDelegate<Applocalizations> old) {
+  bool shouldReload(LocalizationsDelegate<AppLocalizations> old) {
     // TODO: implement shouldReload
     return false;
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
