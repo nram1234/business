@@ -12,18 +12,18 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 bool _saving = false;
+
 class LayoutEditProfile extends StatefulWidget {
   @override
   _LayoutEditProfileState createState() => _LayoutEditProfileState();
 }
 
-final formkey = GlobalKey<FormState>();
-
 class _LayoutEditProfileState extends State<LayoutEditProfile>
     with ValidationData {
   File _image1, _image2, _image3, _image4;
-
+  final formkey = GlobalKey<FormState>();
   List<File> listimage = [];
   String usernamestring,
       userphonestring,
@@ -46,35 +46,29 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
   ];
 
   @override
-  void initState() {
-
-
-  }
+  void initState() {}
 
   final FixedExtentScrollController scrollController =
       FixedExtentScrollController(initialItem: 2);
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ModalProgressHUD(
-            inAsyncCall: _saving,
+          inAsyncCall: _saving,
           child: Form(
               key: formkey,
               child: ListView(
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      initialValue: Userdata.username,
-                      onSaved: (v) {
+                    child: TextField(
+                      onChanged: (v) {
                         Userdata.username = v;
                         usernamestring = v;
                       },
-                      validator: username,
                       decoration: InputDecoration(
                           hintText: AppLocalizations.of(context)
                               .translate('first_name') //'Your Name',
@@ -87,13 +81,13 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      initialValue: Userdata.userphone,
-                      onSaved: (v) {
+                    child: TextField(
+
+                      onChanged: (v) {
                         Userdata.userphone = v;
                         userphonestring = v;
                       },
-                      validator: userphone,
+
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
                           hintText:
@@ -109,13 +103,13 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                       child: CupertinoPickerWheelScroll()),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      initialValue: Userdata.useraddres,
-                      onSaved: (v) {
+                    child: TextField(
+
+                      onChanged: (v) {
                         Userdata.useraddres = v;
                         useraddres = v;
                       },
-                      validator: checkdata,
+
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: InputDecoration(
@@ -129,15 +123,15 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      onSaved: (v) {
+                    child: TextField(
+                      onChanged: (v) {
                         Userdata.Describe = v;
                         Describe = v;
                       },
                       autocorrect: true,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
-                      initialValue: Userdata.Describe,
+
                       decoration: InputDecoration(
                           isDense: true,
                           hintText: AppLocalizations.of(context)
@@ -156,7 +150,6 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                       },
                       onTap: () {
                         getImage(1);
-
                       },
                       child: Container(
                         width: double.infinity,
@@ -237,9 +230,8 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                     ),
                     onPressed: () async {
                       _saving = true;
-
-                      save();
-                      _saving = false;
+                      setState(() {});
+                      await save();
                     },
                   ),
                   CupertinoButton(
@@ -278,7 +270,6 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
 
   //Image Picker
   Future getImage(int i) async {
-
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
@@ -314,26 +305,28 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
       for (int i = 0; i < listimage.length; i++) {
         if (listimage[i] != null) {
           await uploadpic(listimage[i]);
-
         }
       }
-      //usernamestring, userphonestring, useraddres, Describe,
-
+      imagelinke[0] ?? '';
+      imagelinke[1] ?? '';
+      imagelinke[2] ?? '';
+      imagelinke[3] ?? '';
+      DataTypeG dataType = DataTypeG(
+          name: usernamestring,
+          mobile: userphonestring,
+          Address: useraddres,
+          category: category,
+          description: Describe,
+          image1: imagelinke[0],
+          image2: imagelinke[1],
+          image3: imagelinke[2],
+          image4: imagelinke[3]);
+      print(usernamestring + '  $userphonestring   $useraddres  $Describe');
+      _firestore.collection(category).add(dataType.tojson()).whenComplete(() {
+        _saving = false;
+        Navigator.of(context).popAndPushNamed('MyHomePage');
+      });
     }
-    DataTypeG dataType = DataTypeG(
-    name: usernamestring,
-    mobile: userphonestring,
-    Address: useraddres,
-    category: category,
-    description: "kkkkk",
-    image1: imagelinke[0],
-    image2: imagelinke[1],
-    image3: imagelinke[2],
-    image4: imagelinke[3]);
-    _firestore.collection(category).add(dataType.tojson()).whenComplete(() {
-
-    Navigator.of(context).popAndPushNamed('MyHomePage');
-    });
   }
 
   Future uploadpic(imag) async {
