@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:business/DataType/DataType.dart';
@@ -12,6 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:firebase_ui/flutter_firebase_ui.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 bool _saving = false;
 
@@ -23,6 +28,7 @@ class LayoutEditProfile extends StatefulWidget {
 class _LayoutEditProfileState extends State<LayoutEditProfile>
     with ValidationData {
   File _image1, _image2, _image3, _image4;
+  bool  img2=false,img3=false,img4=false;
   final formkey = GlobalKey<FormState>();
   List<File> listimage = [];
   String usernamestring,
@@ -32,9 +38,16 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
       piclink,
       category;
 
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  StreamSubscription<FirebaseUser> _listener;
+  FirebaseUser _currentUser;
+
+
   List<String> imagelinke = [];
 
   final _firestore = Firestore.instance;
+
   List<String> categoryscroll = [
     'Restaurants',
     'Personal',
@@ -46,7 +59,10 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
   ];
 
   @override
-  void initState() {}
+  void initState() {
+    CurrentUser();
+
+  }
 
   final FixedExtentScrollController scrollController =
       FixedExtentScrollController(initialItem: 2);
@@ -163,63 +179,69 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        getImage(2);
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 200,
-                        child: _image2 == null
-                            ? Image.asset(
-                                'assets/images/add.png',
-                                fit: BoxFit.fill,
-                              )
-                            : Image.file(_image2),
+                  Visibility(visible: img2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          getImage(2);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 200,
+                          child: _image2 == null
+                              ? Image.asset(
+                                  'assets/images/add.png',
+                                  fit: BoxFit.fill,
+                                )
+                              : Image.file(_image2),
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onLongPress: () {
-                        //pop mnue dlate pic
-                      },
-                      onTap: () {
-                        getImage(3);
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 200,
-                        child: _image3 == null
-                            ? Image.asset(
-                                'assets/images/add.png',
-                                fit: BoxFit.fill,
-                              )
-                            : Image.file(_image3),
+                  Visibility(visible: img3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onLongPress: () {
+                          //pop mnue dlate pic
+                        },
+                        onTap: () {
+                          getImage(3);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 200,
+                          child: _image3 == null
+                              ? Image.asset(
+                                  'assets/images/add.png',
+                                  fit: BoxFit.fill,
+                                )
+                              : Image.file(_image3),
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onLongPress: () {
-                        //pop mnue dlate pic
-                      },
-                      onTap: () {
-                        getImage(4);
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 200,
-                        child: _image4 == null
-                            ? Image.asset(
-                                'assets/images/add.png',
-                                fit: BoxFit.fill,
-                              )
-                            : Image.file(_image4),
+                  Visibility(visible: img4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onLongPress: () {
+                          //pop mnue dlate pic
+                        },
+                        onTap: () {
+                          getImage(4);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 200,
+                          child: _image4 == null
+                              ? Image.asset(
+                                  'assets/images/add.png',
+                                  fit: BoxFit.fill,
+                                )
+                              : Image.file(_image4),
+                        ),
                       ),
                     ),
                   ),
@@ -276,17 +298,26 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
       switch (i) {
         case 1:
           _image1 = image;
+          if(_image1!=null){
+            img2=true;
+          }
           listimage.add(_image1);
           break;
 
         case 2:
           _image2 = image;
+          if(_image2!=null){
+            img3=true;
+          }
           listimage.add(_image2);
 
           break;
 
         case 3:
           _image3 = image;
+          if(_image3!=null){
+            img4=true;
+          }
           listimage.add(_image3);
           break;
 
@@ -320,12 +351,16 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
           image1: imagelinke[0],
           image2: imagelinke[1],
           image3: imagelinke[2],
-          image4: imagelinke[3]);
-      print(usernamestring + '  $userphonestring   $useraddres  $Describe');
-      _firestore.collection(category).add(dataType.tojson()).whenComplete(() {
+          image4: imagelinke[3],
+          email: _currentUser.email);
+
+
+      _firestore.collection(category)  .add(dataType.tojson()).whenComplete(() {
         _saving = false;
         Navigator.of(context).popAndPushNamed('MyHomePage');
       });
+
+
     }
   }
 
@@ -462,5 +497,48 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
             )
           ]),
     );
+  }
+
+
+  void  CurrentUser() async {
+    _currentUser = await _auth.currentUser();
+
+    _currentUser?.getIdToken(refresh: true);
+    _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
+      setState(() {
+        _currentUser = user;
+      });
+    });
+  }
+
+
+  //name: usernamestring,
+  //          mobile: userphonestring,
+  //          Address: useraddres,
+  //          category: category,
+  //          description: Describe,
+  //          image1: imagelinke[0],
+  //          image2: imagelinke[1],
+  //          image3: imagelinke[2],
+  //          image4: imagelinke[3],
+  //          email: _currentUser.email);
+  _savedatalocal() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', _currentUser.email);
+    await prefs.setString('mobile', userphonestring);
+    await prefs.setString('category',category);
+    await prefs.setString('Describe', Describe);
+    if(imagelinke[0]!=null){
+      await prefs.setString('image0', imagelinke[0]);
+    }
+
+    if(imagelinke[1]!=null){ await prefs.setString('image1', imagelinke[1]);}
+
+    if(imagelinke[2]!=null){ await prefs.setString('image2',imagelinke[2]);}
+
+    if(imagelinke[3]!=null){   await prefs.setString('image3', imagelinke[3]);}
+
+
+
   }
 }
