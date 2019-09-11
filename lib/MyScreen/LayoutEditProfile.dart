@@ -37,14 +37,20 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
       Describe,
       piclink,
       category;
+  //===================================================================
+TextEditingController _usernameController=TextEditingController();
+TextEditingController _userphonController=TextEditingController();
+TextEditingController _useraddresController=TextEditingController();
+TextEditingController _DescribeController=TextEditingController();
 
+  //===================================================================
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   StreamSubscription<FirebaseUser> _listener;
   FirebaseUser _currentUser;
 
 
-  List<String> imagelinke = [];
+  List<String> imagelinke = [' ',' ',' ',' '];
 
   final _firestore = Firestore.instance;
 
@@ -59,8 +65,11 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
   ];
 
   @override
-  void initState() {
+  void initState()  {
+
     CurrentUser();
+
+
 
   }
 
@@ -69,6 +78,8 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
 
   @override
   Widget build(BuildContext context) {
+    _getuserdata();
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -80,7 +91,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(
+                    child: TextField(controller: _usernameController,
                       onChanged: (v) {
                         Userdata.username = v;
                         usernamestring = v;
@@ -98,7 +109,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
-
+                      controller: _userphonController,
                       onChanged: (v) {
                         Userdata.userphone = v;
                         userphonestring = v;
@@ -120,7 +131,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
-
+                      controller: _useraddresController,
                       onChanged: (v) {
                         Userdata.useraddres = v;
                         useraddres = v;
@@ -140,6 +151,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
+                      controller: _DescribeController,
                       onChanged: (v) {
                         Userdata.Describe = v;
                         Describe = v;
@@ -170,17 +182,20 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                       child: Container(
                         width: double.infinity,
                         height: 200,
-                        child: _image1 == null
-                            ? Image.asset(
-                                'assets/images/add.png',
-                                fit: BoxFit.cover,
-                              )
-                            : Image.file(_image1),
+                        child: Container(
+                          width: double.infinity,
+                          height: 200,
+                          child: _image1 == null
+                              ? Image.asset(
+                            'assets/images/add.png',
+                            fit: BoxFit.fill,
+                          )
+                              : Image.file(_image1),
+                        ),
                       ),
                     ),
                   ),
-                  Visibility(visible: img2,
-                    child: Padding(
+                Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
@@ -198,9 +213,8 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                         ),
                       ),
                     ),
-                  ),
-                  Visibility(visible: img3,
-                    child: Padding(
+
+                Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onLongPress: () {
@@ -221,9 +235,8 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                         ),
                       ),
                     ),
-                  ),
-                  Visibility(visible: img4,
-                    child: Padding(
+
+                Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onLongPress: () {
@@ -244,7 +257,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                         ),
                       ),
                     ),
-                  ),
+
                   CupertinoButton(
                     child: Text(
                       AppLocalizations.of(context).translate('save'),
@@ -258,29 +271,38 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
                   ),
                   CupertinoButton(
                     child: Text(
-                      'del',
+                      'get my data',
                       style: TextStyle(fontSize: 20),
                     ),
                     onPressed: () {
-                      StorageReference storageRef =
-                          FirebaseStorage.instance.ref();
+                      _getuserdata();
 
-// Create a reference to the file to delete
-                      StorageReference desertRef =
-                          storageRef.child("images/desert.jpg");
-//                  desertRef.delete().then((val){
-//                    print( '99999999999' );
-//                  }).catchError((){
+
+
+
+
+
 //
 //
-//                    print('1111111111111111111111111111111111111111111111111111111111');
-//                  });
-
-                      var desertRef2 = storageRef.getStorage().getReferenceFromUrl(
-                          'https://firebasestorage.googleapis.com/v0/b/business-fb699.appspot.com/o/images%2Fdesert.jpg?alt=media&token=7b1a2400-5061-4494-9674-8db18e3e6f27');
-                      desertRef2.then((v) {
-                        v.delete();
-                      });
+//                      StorageReference storageRef =
+//                          FirebaseStorage.instance.ref();
+//
+//// Create a reference to the file to delete
+//                      StorageReference desertRef =
+//                          storageRef.child("images/desert.jpg");
+////                  desertRef.delete().then((val){
+////                    print( '99999999999' );
+////                  }).catchError((){
+////
+////
+////                    print('1111111111111111111111111111111111111111111111111111111111');
+////                  });
+//
+//                      var desertRef2 = storageRef.getStorage().getReferenceFromUrl(
+//                          'https://firebasestorage.googleapis.com/v0/b/business-fb699.appspot.com/o/images%2Fdesert.jpg?alt=media&token=7b1a2400-5061-4494-9674-8db18e3e6f27');
+//                      desertRef2.then((v) {
+//                        v.delete();
+//                      });
                     },
                   )
                 ],
@@ -338,10 +360,7 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
           await uploadpic(listimage[i]);
         }
       }
-      imagelinke[0] ?? '';
-      imagelinke[1] ?? '';
-      imagelinke[2] ?? '';
-      imagelinke[3] ?? '';
+
       DataTypeG dataType = DataTypeG(
           name: usernamestring,
           mobile: userphonestring,
@@ -355,9 +374,15 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
           email: _currentUser.email);
 
 
-      _firestore.collection(category)  .add(dataType.tojson()).whenComplete(() {
-        _saving = false;
-        Navigator.of(context).popAndPushNamed('MyHomePage');
+//        _firestore.collection("profile") .document(category).collection(_currentUser.uid) .add(dataType.tojson()).whenComplete(() {
+//        _saving = false;
+//        Navigator.of(context).popAndPushNamed('MyHomePage');
+//      });
+      _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).setData(dataType.tojson()).whenComplete((){
+        print("iam do");
+        setState(() {
+          _saving=false;
+        });
       });
 
 
@@ -507,21 +532,12 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
       setState(() {
         _currentUser = user;
+
       });
     });
   }
 
 
-  //name: usernamestring,
-  //          mobile: userphonestring,
-  //          Address: useraddres,
-  //          category: category,
-  //          description: Describe,
-  //          image1: imagelinke[0],
-  //          image2: imagelinke[1],
-  //          image3: imagelinke[2],
-  //          image4: imagelinke[3],
-  //          email: _currentUser.email);
   _savedatalocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', _currentUser.email);
@@ -540,5 +556,42 @@ class _LayoutEditProfileState extends State<LayoutEditProfile>
 
 
 
+  }
+  _getuserdata()async{
+    if(_currentUser.uid!=null){
+      _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).get().then((v){
+        if(!v.data.isEmpty){
+          DataTypeG data=DataTypeG.fromjson(v.data);
+          _usernameController.text= data.name ??  AppLocalizations.of(context)
+              .translate('first_name');
+          _userphonController.text=data.mobile ??  AppLocalizations.of(context).translate('mobile');
+          _useraddresController.text=data.Address ?? AppLocalizations.of(context).translate('Address');
+          _DescribeController.text=data.Address ?? AppLocalizations.of(context)
+              .translate('description');
+          imagelinke[0]=data.image1;
+          imagelinke[1]=data.image2;
+          imagelinke[2]=data.image3;
+          imagelinke[3]=data.image4;
+
+
+
+        }
+
+
+
+      });
+
+
+    }
+    setState(() {
+
+    });
+  }
+  Widget imagefromweb(url){
+
+
+    if(url!=null)
+      {}
+    return Container(height: 100,child: Image.network(url),);
   }
 }
