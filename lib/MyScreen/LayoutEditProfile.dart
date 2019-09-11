@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 bool _saving = false;
-
+bool _userhaveprofile = false;
 class LayoutEditProfile extends StatefulWidget {
   @override
   _LayoutEditProfileState createState() => _LayoutEditProfileState();
@@ -78,7 +78,7 @@ TextEditingController _DescribeController=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _getuserdata();
+
 
     return Scaffold(
       body: Padding(
@@ -182,17 +182,10 @@ TextEditingController _DescribeController=TextEditingController();
                       child: Container(
                         width: double.infinity,
                         height: 200,
-                        child: Container(
-                          width: double.infinity,
-                          height: 200,
-                          child: _image1 == null
-                              ? Image.asset(
-                            'assets/images/add.png',
-                            fit: BoxFit.fill,
-                          )
-                              : Image.file(_image1),
-                        ),
-                      ),
+                        child:  _userhaveprofile? imagefromweb(_image1,imagelinke[0]):Image.asset(
+                          'assets/images/add.png',
+                          fit: BoxFit.fill,
+                        )),
                     ),
                   ),
                 Padding(
@@ -204,12 +197,10 @@ TextEditingController _DescribeController=TextEditingController();
                         child: Container(
                           width: double.infinity,
                           height: 200,
-                          child: _image2 == null
-                              ? Image.asset(
-                                  'assets/images/add.png',
-                                  fit: BoxFit.fill,
-                                )
-                              : Image.file(_image2),
+                          child: _userhaveprofile? imagefromweb(_image2,imagelinke[1]):Image.asset(
+                            'assets/images/add.png',
+                            fit: BoxFit.fill,
+                          )
                         ),
                       ),
                     ),
@@ -226,12 +217,10 @@ TextEditingController _DescribeController=TextEditingController();
                         child: Container(
                           width: double.infinity,
                           height: 200,
-                          child: _image3 == null
-                              ? Image.asset(
-                                  'assets/images/add.png',
-                                  fit: BoxFit.fill,
-                                )
-                              : Image.file(_image3),
+                          child: _userhaveprofile? imagefromweb(_image3,imagelinke[2]):Image.asset(
+                            'assets/images/add.png',
+                            fit: BoxFit.fill,
+                          )
                         ),
                       ),
                     ),
@@ -248,12 +237,10 @@ TextEditingController _DescribeController=TextEditingController();
                         child: Container(
                           width: double.infinity,
                           height: 200,
-                          child: _image4 == null
-                              ? Image.asset(
-                                  'assets/images/add.png',
-                                  fit: BoxFit.fill,
-                                )
-                              : Image.file(_image4),
+                          child:   _userhaveprofile? imagefromweb(_image4,imagelinke[3]):Image.asset(
+                            'assets/images/add.png',
+                            fit: BoxFit.fill,
+                          )
                         ),
                       ),
                     ),
@@ -316,12 +303,15 @@ TextEditingController _DescribeController=TextEditingController();
   Future getImage(int i) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-    setState(() {
+
       switch (i) {
         case 1:
           _image1 = image;
           if(_image1!=null){
-            img2=true;
+            imagelinke[0]=null;
+            setState(() {
+
+            });
           }
           listimage.add(_image1);
           break;
@@ -348,7 +338,7 @@ TextEditingController _DescribeController=TextEditingController();
           listimage.add(_image4);
           break;
       }
-    });
+
   }
 
   void save() async {
@@ -380,6 +370,7 @@ TextEditingController _DescribeController=TextEditingController();
 //      });
       _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).setData(dataType.tojson()).whenComplete((){
         print("iam do");
+        _savedatalocal();
         setState(() {
           _saving=false;
         });
@@ -559,8 +550,9 @@ TextEditingController _DescribeController=TextEditingController();
   }
   _getuserdata()async{
     if(_currentUser.uid!=null){
-      _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).get().then((v){
+     await _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).get().then((v){
         if(!v.data.isEmpty){
+          _userhaveprofile=true;
           DataTypeG data=DataTypeG.fromjson(v.data);
           _usernameController.text= data.name ??  AppLocalizations.of(context)
               .translate('first_name');
@@ -582,16 +574,41 @@ TextEditingController _DescribeController=TextEditingController();
       });
 
 
+    }else{
+      _userhaveprofile=false;
     }
+
     setState(() {
 
     });
   }
-  Widget imagefromweb(url){
+  Widget imagefromweb(i,String url){
 
 
     if(url!=null)
-      {}
-    return Container(height: 100,child: Image.network(url),);
+      {
+        return Container(height: 100,child: Image.network(url),);
+
+
+
+      }else{
+      if( i != null){
+        return  Image.file(i);
+
+
+      }else{
+        return  Image.asset(
+    'assets/images/add.png',
+    fit: BoxFit.fill,
+    );
+
+      }
+
+
+
+    }
+setState(() {
+
+});
   }
 }
