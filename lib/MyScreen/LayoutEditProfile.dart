@@ -27,16 +27,18 @@ class LayoutEditProfile extends StatefulWidget {
 
 class _LayoutEditProfileState extends State<LayoutEditProfile>
     with ValidationData {
-  File _image1, _image2, _image3, _image4;
-  bool  img2=false,img3=false,img4=false;
+  File _image1, _image2 ;
+  bool  img1=false,img2=false ;
+  bool havewebimage1=false,havewebimage2=false;
   final formkey = GlobalKey<FormState>();
-  List<File> listimage = [];
+  List<File> listimage = [null,null ];
   String usernamestring,
       userphonestring,
       useraddres,
       Describe,
       piclink,
-      category;
+      category="Restaurants";
+  int categoryindex=0;
   //===================================================================
 TextEditingController _usernameController=TextEditingController();
 TextEditingController _userphonController=TextEditingController();
@@ -50,7 +52,7 @@ TextEditingController _DescribeController=TextEditingController();
   FirebaseUser _currentUser;
 
 
-  List<String> imagelinke = [' ',' ',' ',' '];
+  List<String> imagelinke = [null,null,null,null];
 
   final _firestore = Firestore.instance;
 
@@ -73,13 +75,14 @@ TextEditingController _DescribeController=TextEditingController();
 
   }
 
-  final FixedExtentScrollController scrollController =
-      FixedExtentScrollController(initialItem: 2);
+ FixedExtentScrollController scrollController ;
+
 
   @override
   Widget build(BuildContext context) {
 
-
+    scrollController =
+        FixedExtentScrollController(initialItem: categoryindex);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -182,7 +185,7 @@ TextEditingController _DescribeController=TextEditingController();
                       child: Container(
                         width: double.infinity,
                         height: 200,
-                        child:  _userhaveprofile? imagefromweb(_image1,imagelinke[0]):Image.asset(
+                        child: img1?Image.file(_image1 ):Image.asset(
                           'assets/images/add.png',
                           fit: BoxFit.fill,
                         )),
@@ -197,7 +200,7 @@ TextEditingController _DescribeController=TextEditingController();
                         child: Container(
                           width: double.infinity,
                           height: 200,
-                          child: _userhaveprofile? imagefromweb(_image2,imagelinke[1]):Image.asset(
+                          child: img2?Image.file(_image2 ):Image.asset(
                             'assets/images/add.png',
                             fit: BoxFit.fill,
                           )
@@ -205,45 +208,38 @@ TextEditingController _DescribeController=TextEditingController();
                       ),
                     ),
 
-                Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onLongPress: () {
-                          //pop mnue dlate pic
-                        },
-                        onTap: () {
-                          getImage(3);
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: 200,
-                          child: _userhaveprofile? imagefromweb(_image3,imagelinke[2]):Image.asset(
-                            'assets/images/add.png',
-                            fit: BoxFit.fill,
-                          )
-                        ),
-                      ),
-                    ),
+              Visibility(visible: havewebimage1,
+                child: Padding(
+                          padding: const EdgeInsets.all(8.0),
 
-                Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onLongPress: () {
-                          //pop mnue dlate pic
-                        },
-                        onTap: () {
-                          getImage(4);
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: 200,
-                          child:   _userhaveprofile? imagefromweb(_image4,imagelinke[3]):Image.asset(
-                            'assets/images/add.png',
-                            fit: BoxFit.fill,
-                          )
+                            child: Container(
+                              width: double.infinity,
+                              height: 200,
+                              child:havewebimage1?Image.network(imagelinke[0]):Image.asset(
+                                'assets/images/product.png',
+                                fit: BoxFit.fill,
+                              )
+                            ),
+
                         ),
+              ),
+
+
+                Visibility(visible:  havewebimage1,
+                  child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+
+                          child: Container(
+                            width: double.infinity,
+                            height: 200,
+                            child:   havewebimage1?Image.network(imagelinke[1]):Image.asset(
+                              'assets/images/product.png',
+                              fit: BoxFit.fill,
+                            )
+                          ),
+
                       ),
-                    ),
+                ),
 
                   CupertinoButton(
                     child: Text(
@@ -271,8 +267,7 @@ TextEditingController _DescribeController=TextEditingController();
 
 //
 //
-//                      StorageReference storageRef =
-//                          FirebaseStorage.instance.ref();
+
 //
 //// Create a reference to the file to delete
 //                      StorageReference desertRef =
@@ -307,47 +302,53 @@ TextEditingController _DescribeController=TextEditingController();
       switch (i) {
         case 1:
           _image1 = image;
-          if(_image1!=null){
-            imagelinke[0]=null;
-            setState(() {
+img1=true;
+          listimage[0]=image;
+setState(() {
 
-            });
-          }
-          listimage.add(_image1);
+});
           break;
 
         case 2:
           _image2 = image;
-          if(_image2!=null){
-            img3=true;
-          }
-          listimage.add(_image2);
 
+          img2=true;
+          listimage[1]=image;
+          setState(() {
+
+          });
           break;
 
-        case 3:
-          _image3 = image;
-          if(_image3!=null){
-            img4=true;
-          }
-          listimage.add(_image3);
-          break;
 
-        case 4:
-          _image4 = image;
-          listimage.add(_image4);
-          break;
       }
 
   }
 
   void save() async {
     if (formkey.currentState.validate()) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('category',categoryindex );
       formkey.currentState.save();
+      StorageReference storageRef =
+      FirebaseStorage.instance.ref();
+      for (int i = 0; i < imagelinke.length; i++) {
+        if (imagelinke[i] != null) {
+
+           var desertRef2 = await storageRef.getStorage().getReferenceFromUrl(
+               imagelinke[i]);
+                      desertRef2.delete().whenComplete((){
+                        print('5555555555555555555555555555555555555');
+                      });
+        }
+      }
+
+
+
 
       for (int i = 0; i < listimage.length; i++) {
         if (listimage[i] != null) {
-          await uploadpic(listimage[i]);
+
+          await uploadpic( i,listimage[i]);
         }
       }
 
@@ -359,8 +360,7 @@ TextEditingController _DescribeController=TextEditingController();
           description: Describe,
           image1: imagelinke[0],
           image2: imagelinke[1],
-          image3: imagelinke[2],
-          image4: imagelinke[3],
+
           email: _currentUser.email);
 
 
@@ -370,7 +370,7 @@ TextEditingController _DescribeController=TextEditingController();
 //      });
       _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).setData(dataType.tojson()).whenComplete((){
         print("iam do");
-        _savedatalocal();
+       // _savedatalocal();
         setState(() {
           _saving=false;
         });
@@ -380,7 +380,7 @@ TextEditingController _DescribeController=TextEditingController();
     }
   }
 
-  Future uploadpic(imag) async {
+  Future uploadpic( i,imag) async {
     Random random = new Random();
     var now = new DateTime.now();
     var berlinWallFell = new DateTime.utc(1989, 11, 9);
@@ -398,9 +398,9 @@ TextEditingController _DescribeController=TextEditingController();
       print(e);
     });
     piclink = await taskSnapshot.ref.getDownloadURL();
-    imagelinke.add(piclink);
+    imagelinke[i]=piclink;
   }
-
+//=============================================================================================
   Future<StorageReference> getReferenceFromUrl(String fullUrl) async {
     StorageReference storageRef = FirebaseStorage.instance.ref();
     var desertRef2 = storageRef.getStorage().getReferenceFromUrl(fullUrl);
@@ -420,7 +420,8 @@ TextEditingController _DescribeController=TextEditingController();
           itemExtent: 50,
           onSelectedItemChanged: (item) {
             category = categoryscroll[item];
-            print('itemselected' + item.toString());
+            categoryindex=item;
+           print(categoryscroll[item]) ;
           },
           children: [
             Padding(
@@ -429,7 +430,7 @@ TextEditingController _DescribeController=TextEditingController();
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.ac_unit),
-                    Text(AppLocalizations.of(context).translate('Restaurants')),
+                    Text(AppLocalizations.of(context).translate('Restaurants'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     Image.asset(
                       "images/gmailogo.jpg",
                       fit: BoxFit.fitHeight,
@@ -445,7 +446,7 @@ TextEditingController _DescribeController=TextEditingController();
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.zoom_out_map),
-                    Text(AppLocalizations.of(context).translate('Personal'))
+                    Text(AppLocalizations.of(context).translate('Personal'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -457,7 +458,7 @@ TextEditingController _DescribeController=TextEditingController();
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.youtube_searched_for),
-                    Text(AppLocalizations.of(context).translate('Animals'))
+                    Text(AppLocalizations.of(context).translate('Animals'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center,)
                   ],
                 ),
                 height: 100,
@@ -469,7 +470,7 @@ TextEditingController _DescribeController=TextEditingController();
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.wc),
-                    Text(AppLocalizations.of(context).translate('Car'))
+                    Text(AppLocalizations.of(context).translate('Car'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -481,7 +482,7 @@ TextEditingController _DescribeController=TextEditingController();
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.wb_iridescent),
-                    Text(AppLocalizations.of(context).translate('Shops'))
+                    Text(AppLocalizations.of(context).translate('Shops'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -493,7 +494,7 @@ TextEditingController _DescribeController=TextEditingController();
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.volume_off),
-                    Text(AppLocalizations.of(context).translate('Home'))
+                    Text(AppLocalizations.of(context).translate('Home'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -505,7 +506,7 @@ TextEditingController _DescribeController=TextEditingController();
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.view_module),
-                    Text(AppLocalizations.of(context).translate('Building'))
+                    Text(AppLocalizations.of(context).translate('Building'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -535,21 +536,18 @@ TextEditingController _DescribeController=TextEditingController();
     await prefs.setString('mobile', userphonestring);
     await prefs.setString('category',category);
     await prefs.setString('Describe', Describe);
-    if(imagelinke[0]!=null){
-      await prefs.setString('image0', imagelinke[0]);
-    }
 
-    if(imagelinke[1]!=null){ await prefs.setString('image1', imagelinke[1]);}
 
-    if(imagelinke[2]!=null){ await prefs.setString('image2',imagelinke[2]);}
 
-    if(imagelinke[3]!=null){   await prefs.setString('image3', imagelinke[3]);}
 
 
 
   }
   _getuserdata()async{
     if(_currentUser.uid!=null){
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+   categoryindex=   await prefs.get('category'  ) ;
+
      await _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).get().then((v){
         if(!v.data.isEmpty){
           _userhaveprofile=true;
@@ -560,12 +558,18 @@ TextEditingController _DescribeController=TextEditingController();
           _useraddresController.text=data.Address ?? AppLocalizations.of(context).translate('Address');
           _DescribeController.text=data.Address ?? AppLocalizations.of(context)
               .translate('description');
-          imagelinke[0]=data.image1;
-          imagelinke[1]=data.image2;
-          imagelinke[2]=data.image3;
-          imagelinke[3]=data.image4;
 
 
+
+          if(data.image1!=null){
+            imagelinke[0]=data.image1;
+            havewebimage1=true;
+
+          }
+          if(data.image2!=null){
+            imagelinke[1]=data.image2;
+        havewebimage2=true;
+          }
 
         }
 

@@ -6,12 +6,11 @@ class DataTypeG {
   String description;
   String image1;
   String image2;
-  String image3;
-  String image4;
+
   String email;
 
   DataTypeG({this.name, this.mobile, this.category, this.Address,
-      this.description, this.image1, this.image2, this.image3, this.image4,this.email});
+      this.description, this.image1, this.image2,  this.email});
 
   Map<String, dynamic> tojson() {
     Map<String, dynamic> mydata = {};
@@ -22,8 +21,7 @@ class DataTypeG {
     mydata['description'] = description ?? 'i not have  it';
     mydata['image1'] = image1 ?? '';
     mydata['image2'] = image2 ?? '';
-    mydata['image3'] = image3 ?? '';
-    mydata['image4'] = image4 ?? '';
+
     mydata['email'] = email;
     return mydata;
   }
@@ -36,8 +34,7 @@ class DataTypeG {
     description=data['description'];
     image1=data['image1'];
     image2=data['image2'];
-    image3=data['image3'];
-    image4=data['image4'];
+
     email=data['email'];
 
   }
