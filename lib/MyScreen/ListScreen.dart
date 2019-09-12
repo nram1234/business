@@ -74,9 +74,14 @@ class _ListScreenState extends State<ListScreen> {
                           .snapshots(),
                       builder: (context, snapshot) {
                         DataTypeG g=DataTypeG.fromjson(snapshot.data.documents);
+                        print(snapshot.data.documents);
 
-                        print(g);
-                        return NewExpansionTile(context,g.Address);
+                        return ListView.builder(itemCount: snapshot.data.documents.length,itemBuilder: (context,pos){
+                          DataTypeG _data=DataTypeG.fromjson(snapshot.data.documents[pos]);
+
+
+                          return   NewExpansionTile (context,_data.Address) ;
+                        });;
                       },
                     ),
               inAsyncCall: _saving),
