@@ -325,7 +325,7 @@ setState(() {
   }
 
   void save() async {
-    if (formkey.currentState.validate()) {
+    if (formkey.currentState.validate()&&_image1!=null&&_image2!=null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setInt('category',categoryindex );
       formkey.currentState.save();
@@ -370,13 +370,21 @@ setState(() {
 //      });
       _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).setData(dataType.tojson()).whenComplete((){
         print("iam do");
-       // _savedatalocal();
+        Navigator.of(context).pushNamed('MyHomePage');
         setState(() {
           _saving=false;
         });
       });
 
 
+    }else{
+      _saving = false;
+      setState(() {
+
+      });
+      Scaffold
+          .of(context)
+          .showSnackBar(SnackBar(content: Text("Please enter all data and pictures")));
     }
   }
 

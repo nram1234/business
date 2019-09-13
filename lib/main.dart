@@ -11,6 +11,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'MyScreen/LayoutEditProfile.dart';
 import 'MyScreen/ListScreen.dart';
 import 'MyScreen/RegisterUser.dart';
+import 'MyScreen/SignInPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
     initialRoute: 'MyHomePage'
      , routes: {
         'MyHomePage': (context) => MyHomePage(),
-        //'SignInPage':(context)=>SignInPage(),
+        'SignInPage':(context)=>SignInPage(),
         'RegisterUser': (context) => RegisterUser(),
         //'MyHomePage':(context)=>MyHomePage(),
       },

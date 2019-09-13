@@ -30,7 +30,7 @@ String oo="Article Generator is an automatic online tool developed to help those
 
           ExpansionTile(
             title: Text('More data'),
-            children: <Widget>[ Image.network( alldata.image2,fit: BoxFit.fill,) ,
+            children: <Widget>[ Image.network( alldata.image1,fit: BoxFit.fill,) ,Image.network( alldata.image2,fit: BoxFit.fill,) ,
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(alldata.name),

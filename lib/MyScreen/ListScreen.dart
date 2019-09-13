@@ -64,7 +64,7 @@ class _ListScreenState extends State<ListScreen> {
                           },
                           child: CircleAvatar(
                             radius: 40,
-                            backgroundColor: Colors.deepOrange,
+                            backgroundColor: Theme.of(context).accentColor,
                           )),
                       Text(listna[pos])
                     ],

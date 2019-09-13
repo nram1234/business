@@ -11,8 +11,8 @@ class ValidationData{
     return null;
   }
   String vPassword(String value){
-    if(value.length<5){
-      return 'Password must be at least 4 characters';
+    if(value.length<6){
+      return 'Password must be at least 6 characters';
     }
     return null;
   }

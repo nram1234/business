@@ -106,13 +106,24 @@ class _RegisterUserState extends State<RegisterUser> with ValidationData{
                           //se you you ahve this eamil befor
                           if (password == password2) {
 _auth.createUserWithEmailAndPassword(email: email, password: password).then((v){
-  Navigator.of(context).pushNamed('MyHomePage');
+  Navigator.of(context).popAndPushNamed('MyHomePage');
+}).catchError((e){
+  // Handle Errors here.
+  var errorCode = e.code;
+  var errorMessage = e.message;
+  // ...
+  print(errorMessage);
+  Scaffold
+      .of(context)
+      .showSnackBar(SnackBar(content: Text(errorMessage)));
 });
                           } else {
-
+                            Scaffold
+                                .of(context)
+                                .showSnackBar(SnackBar(content: Text("Password does not match")));
                           }
                         }
-                      }),RaisedButton(onPressed: (){_auth.signOut();}),
+                      }),
                   Container(
                     margin: EdgeInsets.only(top: 16),
                     child: Row(
@@ -172,12 +183,11 @@ _auth.createUserWithEmailAndPassword(email: email, password: password).then((v){
     _currentUser?.getIdToken(refresh: true);
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
       if(user == null){}else{
-        Navigator.of(context).pushNamed('MyHomePage');
+        Navigator.of(context).popAndPushNamed('MyHomePage');
       }
-    //  setState(() {
-       // Navigator.of(context).pushNamed('MyHomePage');
+
         _currentUser = user;
-    //  });
+
     });
   }
 }
