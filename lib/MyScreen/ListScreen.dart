@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:business/DataType/DataType.dart';
 import 'package:business/SpecialWidget/NewExpansionTile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,8 +17,17 @@ class _ListScreenState extends State<ListScreen> {
   List<String> listna;
   bool _saving = false;
   bool _firaststart = true;
-  List<dynamic> damydata = [];
+  List<String> catogerylist = [
+    'Building',
+    'Home',
+    'Personal',
+    'Animals',
+    'Car',
+    'Shops',
+    'Restaurants'
+  ];
   final _firstor = Firestore.instance;
+  String catogery = 'Building';
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +44,7 @@ class _ListScreenState extends State<ListScreen> {
       children: <Widget>[
         Container(
           height: 130,
-          child: ListView.builder(
+          child: ListView.builder(shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: listna.length,
               itemBuilder: (context, pos) {
@@ -43,8 +54,9 @@ class _ListScreenState extends State<ListScreen> {
                     children: <Widget>[
                       InkWell(
                           onTap: () async {
-                            // _saving = true;
-                            getdatafromweb();
+                            _saving = true;
+                            catogery = catogerylist[pos];
+
                             _firaststart = false;
                             setState(() {});
 
@@ -61,30 +73,37 @@ class _ListScreenState extends State<ListScreen> {
               }),
         ),
         Expanded(
-          child: ModalProgressHUD(
-              child: _firaststart
-                  ? Center(
-                      child: Text('selectt'),
-                    )
-                  : StreamBuilder<QuerySnapshot>(
-                      stream: _firstor
+       child:
+
+
+            StreamBuilder<QuerySnapshot>(
+                      stream: Firestore.instance
                           .collection('users')
                           .document('proflie')
                           .collection('user')
+                          .where('category', isEqualTo: catogery)
                           .snapshots(),
                       builder: (context, snapshot) {
-                        DataTypeG g=DataTypeG.fromjson(snapshot.data.documents);
-                        print(snapshot.data.documents);
+                        if (snapshot.data.documents.isEmpty) {
+                          return  Center(child: Text("no data to show",textAlign: TextAlign.center,),);
 
-                        return ListView.builder(itemCount: snapshot.data.documents.length,itemBuilder: (context,pos){
-                          DataTypeG _data=DataTypeG.fromjson(snapshot.data.documents[pos]);
+                        }else{
+                          return ListView.builder(
+                              itemCount: snapshot.data.documents.length,
+                              itemBuilder: (context, i) {
 
+                                DataTypeG _data = DataTypeG.fromjson(
+                                    snapshot.data.documents[i]);
 
-                          return   NewExpansionTile (context,_data.Address) ;
-                        });;
+                                return NewExpansionTile(context, _data);
+
+                              });
+
+                        }
+
                       },
                     ),
-              inAsyncCall: _saving),
+
         )
       ],
     );
@@ -108,31 +127,34 @@ class _ListScreenState extends State<ListScreen> {
 
 //  )
 
-  Future<List<String>> myTypedFuture(String string) async {
-    List<String> data = [];
-    await Future.delayed(Duration(seconds: 5));
-    for (int i = 0; i < 100; i++) {
-      data.add(i.toString() + string);
-    }
-    damydata.clear();
-    damydata = data;
-    _saving = false;
-    return data;
-  }
+//  Future<List<String>> myTypedFuture(String string) async {
+//    List<String> data = [];
+//    await Future.delayed(Duration(seconds: 5));
+//    for (int i = 0; i < 100; i++) {
+//      data.add(i.toString() + string);
+//    }
+//    damydata.clear();
+//    damydata = data;
+//    _saving = false;
+//    return data;
+//  }
 
   void getdatafromweb() async {
-//       Firestore.instance
-//          .collection('users').document('proflie').collection('user')
-//          .where('category', isEqualTo: 'car')
-//          .snapshots()
-//          .forEach((v) {
-//        for (var mydata in v.documents) {
-//         print(mydata.data.values);
-//        }
-//      }).whenComplete(() {
-//        _saving = false;
-//      });
-    var v = Firestore.instance.collection('users').snapshots();
-    print(v);
+    await Firestore.instance
+        .collection('users')
+        .document('proflie')
+        .collection('user')
+        .where('category', isEqualTo: 'Car')
+        .snapshots()
+        .forEach((v) {
+      for (var mydata in v.documents) {
+
+        print(mydata.data.values);
+      }
+    }).whenComplete(() {
+      _saving = false;
+      _firaststart=false;});
+
+
   }
 }
