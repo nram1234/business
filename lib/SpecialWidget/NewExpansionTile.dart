@@ -19,7 +19,7 @@ String oo="Article Generator is an automatic online tool developed to help those
         children: <Widget>[
           Container(
 
-                  width: 150,//child:Image.network('https://image.freepik.com/free-vector/polaroid-style-frames-collection_23-2147509767.jpg',fit: BoxFit.fill,),
+                  height: 150, child:Image.network(alldata.image1,fit: BoxFit.cover,),
                   decoration: BoxDecoration(
 
                       borderRadius: BorderRadius.only(
@@ -30,7 +30,7 @@ String oo="Article Generator is an automatic online tool developed to help those
 
           ExpansionTile(
             title: Text('More data'),
-            children: <Widget>[//Image.network('https://image.freepik.com/free-vector/polaroid-style-frames-collection_23-2147509767.jpg',fit: BoxFit.fill,),Image.network('https://firebasestorage.googleapis.com/v0/b/lost-84bb0.appspot.com/o/pic%2F2019-08-20T18%3A03%3A22.6401451989-11-09T00%3A00%3A00.000Z3590?alt=media&token=30cd1c2d-5c9a-4d14-9224-33c2816e5f7c',fit: BoxFit.fill,),Image.network('https://firebasestorage.googleapis.com/v0/b/lost-84bb0.appspot.com/o/pic%2F2019-08-20T18%3A03%3A22.6401451989-11-09T00%3A00%3A00.000Z3590?alt=media&token=30cd1c2d-5c9a-4d14-9224-33c2816e5f7c',fit: BoxFit.fill,),Image.network('https://firebasestorage.googleapis.com/v0/b/lost-84bb0.appspot.com/o/pic%2F2019-08-20T18%3A03%3A22.6401451989-11-09T00%3A00%3A00.000Z3590?alt=media&token=30cd1c2d-5c9a-4d14-9224-33c2816e5f7c',fit: BoxFit.fill,),
+            children: <Widget>[ Image.network( alldata.image2,fit: BoxFit.fill,) ,
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(alldata.name),
@@ -39,12 +39,15 @@ String oo="Article Generator is an automatic online tool developed to help those
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(alldata.Address),
+              ),Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(alldata.description),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
-                    onTap: () => UrlLauncher.launch("tel://01112874607"),
-                    child: Text(alldata.description)),
+                    onTap: () => UrlLauncher.launch("${alldata.mobile}"),
+                    child: Text(alldata.mobile)),
               )
             ],
           )

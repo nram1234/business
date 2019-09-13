@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:business/app_Localizations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/flutter_firebase_ui.dart';
@@ -52,7 +53,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-enum widgetpage { Home, Favorite, Profile, Add_Me }
+enum widgetpage { Home, Profile, Add_Me }
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin<MyHomePage> {
@@ -119,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage>
     return FancyBottomNavigation(
       tabs: [
         TabData(iconData: Icons.home, title: "Home"),
-        TabData(iconData: Icons.favorite, title: "Favorite"),
+
         TabData(iconData: Icons.person, title: "Profile")
       ],
       onTabChangedListener: (position) {
@@ -129,12 +130,8 @@ class _MyHomePageState extends State<MyHomePage>
               selectpage = widgetpage.Home;
             });
             break;
+
           case 1:
-            setState(() {
-              selectpage = widgetpage.Favorite;
-            });
-            break;
-          case 2:
             setState(() {
               selectpage = widgetpage.Profile;
             });
@@ -191,15 +188,6 @@ class _MyHomePageState extends State<MyHomePage>
             opacity: _animation,
             child: Container(child: ListScreen()) // CategoryList(),
 
-        );
-      case widgetpage.Favorite:
-        return FadeTransition(
-          opacity: _animation,
-          child: Container(
-              child: Container(
-                color: Colors.blue,
-              ) // CardList(),
-          ),
         );
       case widgetpage.Profile:
         return FadeTransition(
