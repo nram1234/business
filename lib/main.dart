@@ -19,7 +19,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(   supportedLocales: [Locale('en'), Locale('ar')],
+    return MaterialApp(   debugShowCheckedModeBanner: false,  supportedLocales: [Locale('en'), Locale('ar')],
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
