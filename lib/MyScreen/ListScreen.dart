@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:business/DataType/DataType.dart';
 import 'package:business/SpecialWidget/NewExpansionTile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -17,6 +18,7 @@ class _ListScreenState extends State<ListScreen> {
   List<String> listna;
   bool _saving = false;
   bool _firaststart = true;
+  Firestore _firestore=     Firestore.instance;
   List<String> catogerylist = [
     'Building',
     'Home',
@@ -26,7 +28,7 @@ class _ListScreenState extends State<ListScreen> {
     'Shops',
     'Restaurants'
   ];
-  final _firstor = Firestore.instance;
+
   String catogery = 'Building';
 
   @override
@@ -44,7 +46,8 @@ class _ListScreenState extends State<ListScreen> {
       children: <Widget>[
         Container(
           height: 130,
-          child: ListView.builder(shrinkWrap: true,
+          child: ListView.builder(
+              shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: listna.length,
               itemBuilder: (context, pos) {
@@ -60,50 +63,52 @@ class _ListScreenState extends State<ListScreen> {
                             _firaststart = false;
                             setState(() {});
 
-                            //  await myTypedFuture(listna[pos]);
                           },
                           child: CircleAvatar(
                             radius: 40,
                             backgroundColor: Theme.of(context).accentColor,
                           )),
-                      Text(listna[pos])
+                      Text(listna[pos],textAlign: TextAlign.center,softWrap: true,style: TextStyle(fontSize: 18,color: Colors.black),)
                     ],
                   ),
                 );
               }),
         ),
         Expanded(
-       child:
+          child: StreamBuilder<QuerySnapshot>(
+            stream:
+            _firestore.collection('users')
+                .document('proflie')
+                .collection('user')
+                .where('category', isEqualTo: catogery)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.data==null) {
+                return Center(
+                  child: Text(
+                    "no data to show",
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              } else if (snapshot.data.documents.isEmpty) {
+                return Center(
+                  child: Text(
+                    "no data to show",
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, i) {
+                      DataTypeG _data =
+                          DataTypeG.fromjson(snapshot.data.documents[i]);
 
-
-            StreamBuilder<QuerySnapshot>(
-                      stream: Firestore.instance
-                          .collection('users')
-                          .document('proflie')
-                          .collection('user')
-                          .where('category', isEqualTo: catogery)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.data.documents.isEmpty) {
-                          return  Center(child: Text("no data to show",textAlign: TextAlign.center,),);
-
-                        }else{
-                          return ListView.builder(
-                              itemCount: snapshot.data.documents.length,
-                              itemBuilder: (context, i) {
-
-                                DataTypeG _data = DataTypeG.fromjson(
-                                    snapshot.data.documents[i]);
-
-                                return NewExpansionTile(context, _data);
-
-                              });
-
-                        }
-
-                      },
-                    ),
-
+                      return NewExpansionTile(context, _data);
+                    });
+              }
+            },
+          ),
         )
       ],
     );
@@ -148,13 +153,11 @@ class _ListScreenState extends State<ListScreen> {
         .snapshots()
         .forEach((v) {
       for (var mydata in v.documents) {
-
         print(mydata.data.values);
       }
     }).whenComplete(() {
       _saving = false;
-      _firaststart=false;});
-
-
+      _firaststart = false;
+    });
   }
 }

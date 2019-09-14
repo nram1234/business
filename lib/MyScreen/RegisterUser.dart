@@ -38,7 +38,7 @@ class _RegisterUserState extends State<RegisterUser> with ValidationData{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+
       body: SingleChildScrollView(
         child: Form(
             key: formkey,
@@ -191,3 +191,6 @@ _auth.createUserWithEmailAndPassword(email: email, password: password).then((v){
     });
   }
 }
+
+
+
