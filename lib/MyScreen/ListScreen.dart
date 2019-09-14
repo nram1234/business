@@ -28,7 +28,15 @@ class _ListScreenState extends State<ListScreen> {
     'Shops',
     'Restaurants'
   ];
-
+  List<String> catogeryiconlist = [
+    'assets/images/hook.png',
+    'assets/images/poste.png',
+    'assets/images/mm.png',
+    'assets/images/dog.png',
+    'assets/images/carr.jpg',
+    'assets/images/shopping.png',
+    'assets/images/rest.png'
+  ];
   String catogery = 'Building';
 
   @override
@@ -66,7 +74,8 @@ class _ListScreenState extends State<ListScreen> {
                           },
                           child: CircleAvatar(
                             radius: 40,
-                            backgroundColor: Theme.of(context).accentColor,
+                           backgroundImage:AssetImage(catogeryiconlist[pos]) ,
+                           // child: Image.asset(catogeryiconlist[pos]),
                           )),
                       Text(listna[pos],textAlign: TextAlign.center,softWrap: true,style: TextStyle(fontSize: 18,color: Colors.black),)
                     ],

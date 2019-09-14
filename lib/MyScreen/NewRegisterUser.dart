@@ -2,7 +2,8 @@ import 'package:business/SignInPageWidget/CustomShapeClipper.dart';
 import 'package:business/SignInPageWidget/CustomTextField.dart';
 import 'package:business/SignInPageWidget/ResponsiveWidget.dart';
 import 'package:business/Validation/ValidationData.dart';
-import 'package:firebase_ui/flutter_firebase_ui.dart'  ;
+import 'package:firebase_ui/flutter_firebase_ui.dart';
+
 
 
 import 'package:flutter/material.dart';
@@ -11,21 +12,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
 
-class SignInPage extends StatelessWidget {
+class NewRegisterUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SignInScreen(),
+      body: NewRegister (),
     );
   }
 }
 
-class SignInScreen extends StatefulWidget {
+class NewRegister  extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _RegisterUserState createState() => _RegisterUserState();
 }
 
-class _SignInScreenState extends State<SignInScreen> with ValidationData {
+class _RegisterUserState extends State<NewRegister> with ValidationData {
 
   double _height;
   double _width;
@@ -34,9 +35,23 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
   bool _medium;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordController2 = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
   FirebaseAuth _auth = FirebaseAuth.instance;
+  String email;
+  String password;
+  String password2;
 
+  FirebaseUser _currentUser;
+  bool is_register_user = false;
+
+  StreamSubscription<FirebaseUser> _listener;
+
+
+  @override
+  void initState() {
+    _checkCurrentUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +84,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
               SizedBox(height: _height / 12),
               button(),
               signUpTextRow(),
+              Container(height: 50,)
             ],
           ),
         ),
@@ -90,7 +106,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
                   : _height / 3.5),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.orange[200], Colors.pinkAccent],
+                  colors: [Colors.amberAccent[200], Colors.pinkAccent],
                 ),
               ),
             ),
@@ -106,7 +122,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
                   : _height / 4),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.orange[200], Colors.pinkAccent],
+                  colors: [Colors.amberAccent[200], Colors.pinkAccent],
                 ),
               ),
             ),
@@ -150,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
       child: Row(
         children: <Widget>[
           Text(
-            "Sign in to your account",
+            "Signup",
             style: TextStyle(
               fontWeight: FontWeight.w200,
               fontSize: _large ? 20 : (_medium ? 17.5 : 15),
@@ -174,12 +190,26 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
             emailTextFormField(),
             SizedBox(height: _height / 40.0),
             passwordTextFormField(),
-            passwordTextFormField(),
+            SizedBox(height: _height / 40.0),
+            passwordTextFormField2(),
+            SizedBox(height: _height / 40.0),
             Container(
               height: 100,
-              child:  SignInScreen()
-            ),
-          ],
+              child:  SignInScreen(showBar: false,
+                avoidBottomInset: false,
+                bottomPadding: 0,
+                horizontalPadding: 0,providers: [ProvidersTypes.google] ,  twitterConsumerSecret: '',
+                twitterConsumerKey: '',),
+            ), Container(
+              height: 100,
+              child: SignInScreen(showBar: false,
+                avoidBottomInset: false,
+                bottomPadding: 0,
+                horizontalPadding: 0,providers: [ProvidersTypes.facebook] ,  twitterConsumerSecret: '',
+                twitterConsumerKey: '',),
+            ) ,
+
+           ],
         ),
       ),
     );
@@ -192,17 +222,38 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
       icon: Icons.email,
       hint: "Email ID",
       funvalidator: vEmail,
+        onSavedd: (v) {
+      email = v;
+    } ,
     );
   }
 
   Widget passwordTextFormField() {
     return CustomTextField(
-      keyboardType: TextInputType.emailAddress,
+
       textEditingController: passwordController,
       icon: Icons.lock,
       obscureText: true,
       hint: "Password",
       funvalidator: vPassword,
+
+        onSavedd: (v) {
+          password = v;
+        }
+    );
+  }
+  Widget passwordTextFormField2() {
+    return CustomTextField(
+      keyboardType: TextInputType.emailAddress,
+      textEditingController: passwordController2,
+
+      icon: Icons.lock,
+      obscureText: true,
+      hint: "Password",
+      funvalidator: vPassword,
+        onSavedd: (v) {
+          password2 = v;
+        }
     );
   }
 
@@ -211,19 +262,28 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
     return RaisedButton(
       elevation: 5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: () {
+      onPressed: () async {
         if (_key.currentState.validate()) {
-          print(emailController.text);
-
-          _auth.signInWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text).then((v){
-            Navigator.of(context).popAndPushNamed('MyHomePage');
-
-          }).catchError((e){
+          _key.currentState.save();
+          //se you you ahve this eamil befor
+          if (password == password2) {
+            _auth.createUserWithEmailAndPassword(email: email, password: password).then((v){
+              Navigator.of(context).popAndPushNamed('MyHomePage');
+            }).catchError((e){
+              // Handle Errors here.
+              var errorCode = e.code;
+              var errorMessage = e.message;
+              // ...
+              print(errorMessage);
+              Scaffold
+                  .of(context)
+                  .showSnackBar(SnackBar(content: Text(errorMessage)));
+            });
+          } else {
             Scaffold
                 .of(context)
-                .showSnackBar(SnackBar(content: Text('Login NotSuccessful')));
-          });
+                .showSnackBar(SnackBar(content: Text("Password does not match")));
+          }
         }
       },
       textColor: Colors.white,
@@ -234,11 +294,11 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           gradient: LinearGradient(
-            colors: <Color>[Colors.orange[200], Colors.pinkAccent],
+            colors: <Color>[Colors.amberAccent[200], Colors.pinkAccent],
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('SIGN IN',
+        child: Text('SIGN UP',
             style: TextStyle(fontSize: _large ? 14 : (_medium ? 12 : 10))),
       ),
     );
@@ -251,7 +311,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            "Don't have an account?",
+            "have an account?",
             style: TextStyle(fontWeight: FontWeight.w400,
                 fontSize: _large ? 14 : (_medium ? 12 : 10)),
           ),
@@ -260,20 +320,33 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed('RegisterUser');
+              Navigator.of(context).pushNamed('SignInPage');
               print("Routing to Sign up screen");
             },
             child: Text(
-              "Sign up",
+              "Sign In",
               style: TextStyle(
                   fontWeight: FontWeight.w800,
-                  color: Colors.orange[200],
-                  fontSize: _large ? 19 : (_medium ? 17 : 15)),
+                  color: Colors.amberAccent[200],
+                  fontSize: _large ? 20 : (_medium ? 18 : 16)),
             ),
           )
         ],
       ),
     );
+  }
+  void _checkCurrentUser() async {
+    _currentUser = await _auth.currentUser();
+    if(_currentUser == null){}
+    _currentUser?.getIdToken(refresh: true);
+    _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
+      if(user == null){}else{
+        Navigator.of(context).popAndPushNamed('MyHomePage');
+      }
+
+      _currentUser = user;
+
+    });
   }
 
 }

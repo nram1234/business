@@ -250,7 +250,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationData {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed('RegisterUser');
+              Navigator.of(context).pushNamed('NewRegisterUser');
               print("Routing to Sign up screen");
             },
             child: Text(

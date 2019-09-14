@@ -261,33 +261,21 @@ TextEditingController _DescribeController=TextEditingController();
                       _getuserdata();
 
 
-
-
-
-
-//
-//
-
-//
-//// Create a reference to the file to delete
-//                      StorageReference desertRef =
-//                          storageRef.child("images/desert.jpg");
-////                  desertRef.delete().then((val){
-////                    print( '99999999999' );
-////                  }).catchError((){
-////
-////
-////                    print('1111111111111111111111111111111111111111111111111111111111');
-////                  });
-//
-//                      var desertRef2 = storageRef.getStorage().getReferenceFromUrl(
-//                          'https://firebasestorage.googleapis.com/v0/b/business-fb699.appspot.com/o/images%2Fdesert.jpg?alt=media&token=7b1a2400-5061-4494-9674-8db18e3e6f27');
-//                      desertRef2.then((v) {
-//                        v.delete();
-//                      });
                     },
                   )
-                ],
+               , CupertinoButton(
+                    child: Text(
+                      'Sing Out!',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    onPressed: () {
+                    _auth.signOut().then((v){
+                      Navigator.of(context).popAndPushNamed('MyHomePage');
+                    });
+
+
+                    },
+                  ) ],
               )),
         ),
       ),
@@ -301,22 +289,26 @@ TextEditingController _DescribeController=TextEditingController();
 
       switch (i) {
         case 1:
-          _image1 = image;
-img1=true;
-          listimage[0]=image;
-setState(() {
+          if(image!=null){
+            _image1 = image;
+            img1=true;
+            listimage[0]=image;
+            setState(() {
 
-});
+            });
+          }
+
           break;
 
         case 2:
-          _image2 = image;
+          if(image!=null){ _image2 = image;
 
           img2=true;
           listimage[1]=image;
           setState(() {
 
-          });
+          });}
+
           break;
 
 
@@ -337,7 +329,7 @@ setState(() {
            var desertRef2 = await storageRef.getStorage().getReferenceFromUrl(
                imagelinke[i]);
                       desertRef2.delete().whenComplete((){
-                        print('5555555555555555555555555555555555555');
+
                       });
         }
       }
@@ -583,7 +575,11 @@ setState(() {
 
 
 
-      });
+      }).catchError((e){
+       Scaffold
+           .of(context)
+           .showSnackBar(SnackBar(content: Text('Login NotSuccessful')));
+     });
 
 
     }else{
@@ -620,8 +616,6 @@ setState(() {
 
 
     }
-setState(() {
 
-});
   }
 }

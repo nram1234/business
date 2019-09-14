@@ -14,14 +14,14 @@ class CustomTextField extends StatelessWidget {
   bool large;
   bool medium;
   Function funvalidator;
-
+  Function onSavedd;
   CustomTextField(
       {this.hint,
         this.textEditingController,
         this.keyboardType,
         this.icon,
         this.obscureText= false,
-        this.funvalidator
+        this.funvalidator,this.onSavedd
       });
 
   @override
@@ -35,10 +35,12 @@ class CustomTextField extends StatelessWidget {
       elevation: large? 12 : (medium? 10 : 8),
       child: TextFormField(validator: funvalidator,
         controller: textEditingController,
+         onSaved: onSavedd,
         keyboardType: keyboardType,
-        cursorColor: Colors.orange[200],
+        cursorColor: Colors.amberAccent[200],
+         obscureText: obscureText,
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.orange[200], size: 20),
+          prefixIcon: Icon(icon, color: Colors.amberAccent[200], size: 20),
           hintText: hint,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),

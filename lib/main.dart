@@ -10,6 +10,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'MyScreen/LayoutEditProfile.dart';
 import 'MyScreen/ListScreen.dart';
+import 'MyScreen/NewRegisterUser.dart';
 import 'MyScreen/RegisterUser.dart';
 import 'MyScreen/SignInPage.dart';
 
@@ -40,8 +41,9 @@ class MyApp extends StatelessWidget {
      , routes: {
         'MyHomePage': (context) => MyHomePage(),
         'SignInPage':(context)=>SignInPage(),
-        'RegisterUser': (context) => RegisterUser(),
-        //'MyHomePage':(context)=>MyHomePage(),
+     //   'RegisterUser': (context) => RegisterUser(),
+        'NewRegisterUser': (context) => NewRegisterUser(),
+
       },
       );
   }
@@ -199,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage>
       case widgetpage.Add_Me:
         return FadeTransition(
           opacity: _animation,
-          child: RegisterUser(),
+          child: NewRegisterUser(),
         );
         break;
     }
