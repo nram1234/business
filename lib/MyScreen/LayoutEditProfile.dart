@@ -270,7 +270,7 @@ TextEditingController _DescribeController=TextEditingController();
                     ),
                     onPressed: () {
                     _auth.signOut().then((v){
-                      Navigator.of(context).popAndPushNamed('MyHomePage');
+                      Navigator.of(context).pushReplacementNamed('MyHomePage');
                     });
 
 
@@ -429,12 +429,14 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.ac_unit),
-                    Text(AppLocalizations.of(context).translate('Restaurants'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                    Image.asset(
-                      "images/gmailogo.jpg",
-                      fit: BoxFit.fitHeight,
-                    )
+                    Container(height: 50,width: 50,
+                      child: Image.asset(
+                        "assets/images/rest.png",
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context).translate('Restaurants'),style: TextStyle(fontSize:15),textAlign: TextAlign.center),
+
                   ],
                 ),
                 height: 100,
@@ -445,8 +447,13 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.zoom_out_map),
-                    Text(AppLocalizations.of(context).translate('Personal'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
+                    Container(height: 50,width: 50,
+                      child: Image.asset(
+                       'assets/images/mm.png' ,
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context).translate('Personal'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -457,8 +464,13 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.youtube_searched_for),
-                    Text(AppLocalizations.of(context).translate('Animals'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center,)
+                    Container(height: 50,width: 50,
+                      child: Image.asset(
+                        'assets/images/dog.png',
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context).translate('Animals'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center,)
                   ],
                 ),
                 height: 100,
@@ -469,8 +481,13 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.wc),
-                    Text(AppLocalizations.of(context).translate('Car'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
+                    Container(height: 50,width: 50,
+                      child: Image.asset(
+                        'assets/images/carr.jpg',
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context).translate('Car'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -481,8 +498,13 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.wb_iridescent),
-                    Text(AppLocalizations.of(context).translate('Shops'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
+                    Container(height: 50,width: 50,
+                      child: Image.asset(
+                        'assets/images/shopping.png',
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context).translate('Shops'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -493,8 +515,13 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.volume_off),
-                    Text(AppLocalizations.of(context).translate('Home'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
+                    Container(height: 50,width: 50,
+                      child: Image.asset(
+                        'assets/images/poste.png',
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context).translate('Home'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -505,8 +532,13 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.view_module),
-                    Text(AppLocalizations.of(context).translate('Building'),style: TextStyle(fontSize: 18),textAlign: TextAlign.center)
+                    Container(height: 50,width: 50,
+                      child: Image.asset(
+                        'assets/images/hook.png'
+
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context).translate('Building'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,

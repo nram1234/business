@@ -53,7 +53,7 @@ class _ListScreenState extends State<ListScreen> {
     return Column(
       children: <Widget>[
         Container(
-          height: 130,
+          height: 100,
           child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -73,11 +73,11 @@ class _ListScreenState extends State<ListScreen> {
 
                           },
                           child: CircleAvatar(
-                            radius: 40,
+                            radius: 30,
                            backgroundImage:AssetImage(catogeryiconlist[pos]) ,
                            // child: Image.asset(catogeryiconlist[pos]),
                           )),
-                      Text(listna[pos],textAlign: TextAlign.center,softWrap: true,style: TextStyle(fontSize: 18,color: Colors.black),)
+                      Text(listna[pos],textAlign: TextAlign.center,softWrap: true,style: TextStyle(fontSize: 15,color: Colors.black),)
                     ],
                   ),
                 );

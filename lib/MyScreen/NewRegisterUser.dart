@@ -341,7 +341,7 @@ class _RegisterUserState extends State<NewRegister> with ValidationData {
     _currentUser?.getIdToken(refresh: true);
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
       if(user == null){}else{
-        Navigator.of(context).popAndPushNamed('MyHomePage');
+        Navigator.of(context).pushReplacementNamed('MyHomePage');
       }
 
       _currentUser = user;

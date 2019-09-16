@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:business/app_Localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/flutter_firebase_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,14 +20,22 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(   debugShowCheckedModeBanner: false,  supportedLocales: [Locale('en'), Locale('ar')],
+    return MaterialApp(
+
+
+
+
+      debugShowCheckedModeBanner: false,
+      supportedLocales: [Locale('en'), Locale('ar')],
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
-      ],localeResolutionCallback: (locale,supportedLocales){
-        for(var supportedLocale in supportedLocales){
-          if(supportedLocale.languageCode == locale.languageCode&&supportedLocale.countryCode==locale.countryCode){
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
             return supportedLocale;
           }
         }
@@ -36,16 +45,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-   // home:Center(child: Text(   'uuuu'),)// MyHomePage(title: 'Flutter Demo Home Page'),
-    initialRoute: 'MyHomePage'
-     , routes: {
+      // home:Center(child: Text(   'uuuu'),)// MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: 'MyHomePage',
+      routes: {
         'MyHomePage': (context) => MyHomePage(),
-        'SignInPage':(context)=>SignInPage(),
-     //   'RegisterUser': (context) => RegisterUser(),
+        'SignInPage': (context) => SignInPage(),
+        //   'RegisterUser': (context) => RegisterUser(),
         'NewRegisterUser': (context) => NewRegisterUser(),
-
       },
-      );
+  builder: (BuildContext context, Widget child){
+
+
+    return Padding(padding: EdgeInsets.only(bottom:55),child: child,);
+  },  );
   }
 }
 
@@ -60,6 +72,54 @@ enum widgetpage { Home, Profile, Add_Me }
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin<MyHomePage> {
+
+  //------------------------------------------------------------
+  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['Mobile','People','Car','Motorcycle','Documents','Animal','Camera','Wallet','Laptop','work'
+      , 'job','freelancer','Building and construction','Services','hand-made','Handcrafts','Clothes','shoes','Restaurants','Food','Cleaning','Shopping','trade'
+    ],
+
+  );
+  BannerAd myBanner = BannerAd(
+    // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+    // https://developers.google.com/admob/android/test-ads
+    // https://developers.google.com/admob/ios/test-ads
+    adUnitId: 'ca-app-pub-7535075522299407/9296395199',
+    size: AdSize.banner,
+    //targetingInfo: targetingInfo,
+    listener: (MobileAdEvent event) {
+      print("BannerAd event is $event");
+
+      print("MobileAdEvent.impression");
+    },
+  );
+
+
+
+
+
+
+
+
+  //=================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   AnimationController _controller;
   Animation _animation;
 
@@ -70,11 +130,11 @@ class _MyHomePageState extends State<MyHomePage>
 
   widgetpage selectpage = widgetpage.Home;
 
-
   @override
   void initState() {
     super.initState();
-
+    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-7535075522299407~4357276740');
+    myBanner..load()..show(  anchorOffset: 0.0,anchorType: AnchorType.bottom);
     _checkCurrentUser();
     _controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 2000));
@@ -108,22 +168,18 @@ class _MyHomePageState extends State<MyHomePage>
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return SafeArea(
               top: true,
-              child:
-              getCustmBadg(),
-
+              child: getCustmBadg(),
             );
           },
         ),
         bottomNavigationBar:
-        is_register_user ? register_user() : not_register_user());
+            is_register_user ? register_user() : not_register_user());
   }
-
 
   Widget register_user() {
     return FancyBottomNavigation(
       tabs: [
         TabData(iconData: Icons.home, title: "Home"),
-
         TabData(iconData: Icons.person, title: "Profile")
       ],
       onTabChangedListener: (position) {
@@ -191,12 +247,11 @@ class _MyHomePageState extends State<MyHomePage>
             opacity: _animation,
             child: Container(child: ListScreen()) // CategoryList(),
 
-        );
+            );
       case widgetpage.Profile:
         return FadeTransition(
-            opacity: _animation,
-            child: LayoutEditProfile() // ProfileLayout(),
-        );
+            opacity: _animation, child: LayoutEditProfile() // ProfileLayout(),
+            );
         break;
       case widgetpage.Add_Me:
         return FadeTransition(
