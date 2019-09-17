@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:business/app_Localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
-import 'package:firebase_admob/firebase_admob.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/flutter_firebase_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 import 'MyScreen/LayoutEditProfile.dart';
 import 'MyScreen/ListScreen.dart';
 import 'MyScreen/NewRegisterUser.dart';
@@ -53,11 +53,14 @@ class MyApp extends StatelessWidget {
         //   'RegisterUser': (context) => RegisterUser(),
         'NewRegisterUser': (context) => NewRegisterUser(),
       },
-  builder: (BuildContext context, Widget child){
+//  builder: (BuildContext context, Widget child){
+//
+//
+//    return Padding(padding: EdgeInsets.only(bottom:55),child: child,);
+//  },
 
 
-    return Padding(padding: EdgeInsets.only(bottom:55),child: child,);
-  },  );
+    );
   }
 }
 
@@ -74,26 +77,29 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin<MyHomePage> {
 
   //------------------------------------------------------------
-  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-    keywords: <String>['Mobile','People','Car','Motorcycle','Documents','Animal','Camera','Wallet','Laptop','work'
-      , 'job','freelancer','Building and construction','Services','hand-made','Handcrafts','Clothes','shoes','Restaurants','Food','Cleaning','Shopping','trade'
-    ],
 
-  );
-  BannerAd myBanner = BannerAd(
-    // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-    // https://developers.google.com/admob/android/test-ads
-    // https://developers.google.com/admob/ios/test-ads
-    adUnitId: 'ca-app-pub-7535075522299407/9296395199',
-    size: AdSize.banner,
-    //targetingInfo: targetingInfo,
-    listener: (MobileAdEvent event) {
-      print("BannerAd event is $event");
 
-      print("MobileAdEvent.impression");
-    },
-  );
-
+//
+//  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+//    keywords: <String>['Mobile','People','Car','Motorcycle','Documents','Animal','Camera','Wallet','Laptop','work'
+//      , 'job','freelancer','Building and construction','Services','hand-made','Handcrafts','Clothes','shoes','Restaurants','Food','Cleaning','Shopping','trade'
+//    ],
+//
+//  );
+//  BannerAd myBanner = BannerAd(
+//    // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+//    // https://developers.google.com/admob/android/test-ads
+//    // https://developers.google.com/admob/ios/test-ads
+//    adUnitId: 'ca-app-pub-7535075522299407/9296395199',
+//    size: AdSize.banner,
+//    //targetingInfo: targetingInfo,
+//    listener: (MobileAdEvent event) {
+//      print("BannerAd event is $event");
+//
+//      print("MobileAdEvent.impression");
+//    },
+//  );
+//
 
 
 
@@ -133,8 +139,8 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
-    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-7535075522299407~4357276740');
-    myBanner..load()..show(  anchorOffset: 0.0,anchorType: AnchorType.bottom);
+//    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-7535075522299407~4357276740');
+//    myBanner..load()..show(  anchorOffset: 0.0,anchorType: AnchorType.bottom);
     _checkCurrentUser();
     _controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 2000));

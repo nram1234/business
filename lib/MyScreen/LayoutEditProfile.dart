@@ -15,7 +15,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_ui/flutter_firebase_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 
 bool _saving = false;
@@ -318,8 +318,7 @@ TextEditingController _DescribeController=TextEditingController();
 
   void save() async {
     if (formkey.currentState.validate()&&_image1!=null&&_image2!=null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('category',categoryindex );
+
       formkey.currentState.save();
       StorageReference storageRef =
       FirebaseStorage.instance.ref();
@@ -562,23 +561,22 @@ TextEditingController _DescribeController=TextEditingController();
   }
 
 
-  _savedatalocal() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', _currentUser.email);
-    await prefs.setString('mobile', userphonestring);
-    await prefs.setString('category',category);
-    await prefs.setString('Describe', Describe);
-
-
-
-
-
-
-  }
+//  _savedatalocal() async {
+//    SharedPreferences prefs = await SharedPreferences.getInstance();
+//    await prefs.setString('email', _currentUser.email);
+//    await prefs.setString('mobile', userphonestring);
+//    await prefs.setString('category',category);
+//    await prefs.setString('Describe', Describe);
+//
+//
+//
+//
+//
+//
+//  }
   _getuserdata()async{
     if(_currentUser.uid!=null){
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-   categoryindex=   await prefs.get('category'  ) ;
+
 
      await _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).get().then((v){
         if(!v.data.isEmpty){
