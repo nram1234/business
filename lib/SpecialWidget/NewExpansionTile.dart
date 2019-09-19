@@ -46,7 +46,7 @@ String oo="Article Generator is an automatic online tool developed to help those
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
-                    onTap: () => UrlLauncher.launch("${alldata.mobile}"),
+                    onTap: () => UrlLauncher.launch("tel://${alldata.mobile}"),
                     child: Text(alldata.mobile)),
               )
             ],
