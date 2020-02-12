@@ -16,10 +16,9 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_ui/flutter_firebase_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-
 bool _saving = false;
 bool _userhaveprofile = false;
+
 class LayoutEditProfile extends StatefulWidget {
   @override
   _LayoutEditProfileState createState() => _LayoutEditProfileState();
@@ -27,23 +26,26 @@ class LayoutEditProfile extends StatefulWidget {
 
 class _LayoutEditProfileState extends State<LayoutEditProfile>
     with ValidationData {
-  File _image1, _image2 ;
-  bool  img1=false,img2=false ;
-  bool havewebimage1=false,havewebimage2=false;
+  File _image1, _image2;
+
+  bool img1 = false, img2 = false;
+
+  bool havewebimage1 = false, havewebimage2 = false;
   final formkey = GlobalKey<FormState>();
-  List<File> listimage = [null,null ];
+  List<File> listimage = [null, null];
   String usernamestring,
       userphonestring,
       useraddres,
       Describe,
       piclink,
-      category="Restaurants";
-  int categoryindex=0;
+      category = "Restaurants";
+  int categoryindex = 0;
+
   //===================================================================
-TextEditingController _usernameController=TextEditingController();
-TextEditingController _userphonController=TextEditingController();
-TextEditingController _useraddresController=TextEditingController();
-TextEditingController _DescribeController=TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _userphonController = TextEditingController();
+  TextEditingController _useraddresController = TextEditingController();
+  TextEditingController _DescribeController = TextEditingController();
 
   //===================================================================
 
@@ -51,8 +53,7 @@ TextEditingController _DescribeController=TextEditingController();
   StreamSubscription<FirebaseUser> _listener;
   FirebaseUser _currentUser;
 
-
-  List<String> imagelinke = [null,null,null,null];
+  List<String> imagelinke = [null, null, null, null];
 
   final _firestore = Firestore.instance;
 
@@ -67,216 +68,243 @@ TextEditingController _DescribeController=TextEditingController();
   ];
 
   @override
-  void initState()  {
-
+  void initState() {
     CurrentUser();
-
-
-
   }
 
- FixedExtentScrollController scrollController ;
-
+  FixedExtentScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
+    scrollController = FixedExtentScrollController(initialItem: categoryindex);
 
-    scrollController =
-        FixedExtentScrollController(initialItem: categoryindex);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ModalProgressHUD(
           inAsyncCall: _saving,
-          child: Form(
-              key: formkey,
-              child: ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(controller: _usernameController,
-                      onChanged: (v) {
-                        Userdata.username = v;
-                        usernamestring = v;
-                      },
-                      decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)
-                              .translate('first_name') //'Your Name',
-                          ,
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)))),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _userphonController,
-                      onChanged: (v) {
-                        Userdata.userphone = v;
-                        userphonestring = v;
-                      },
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: StreamBuilder(
+                stream: _firestore
+                    .collection('u')
+                    .document("proflie")
+                    .collection('user')
+                    .document(_currentUser.uid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  print('99999999999');
+                  if (snapshot.hasData) {
 
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                          hintText:
-                              AppLocalizations.of(context).translate('mobile'),
-                          prefixIcon: Icon(Icons.phone),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)))),
-                    ),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CupertinoPickerWheelScroll()),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _useraddresController,
-                      onChanged: (v) {
-                        Userdata.useraddres = v;
-                        useraddres = v;
-                      },
+                    DataTypeG data = DataTypeG.fromjson(snapshot.data);
+                    print(data.name );
+                    _usernameController.text =
+                        data.name  ;
+                    _userphonController.text =
+                        data.mobile  ;
+                    _useraddresController.text =
+                        data.Address  ;
+                    _DescribeController.text = data.Address  ;
 
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      decoration: InputDecoration(
-                          hintText:
-                              AppLocalizations.of(context).translate('Address'),
-                          prefixIcon: Icon(Icons.place),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)))),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _DescribeController,
-                      onChanged: (v) {
-                        Userdata.Describe = v;
-                        Describe = v;
-                      },
-                      autocorrect: true,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
+                    if (data.image1 != null) {
+                      imagelinke[0] = data.image1;
+                      havewebimage1 = true;
+                    }
+                    if (data.image2 != null) {
+                      imagelinke[1] = data.image2;
+                      havewebimage2 = true;
+                    }
+                  }
 
-                      decoration: InputDecoration(
-                          isDense: true,
-                          hintText: AppLocalizations.of(context)
-                              .translate('description'),
-                          prefixIcon: Icon(Icons.info),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)))),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onLongPress: () {
-                        //pop mnue dlate pic
-                      },
-                      onTap: () {
-                        getImage(1);
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 200,
-                        child: img1?Image.file(_image1 ):Image.asset(
-                          'assets/images/add.png',
-                          fit: BoxFit.fill,
-                        )),
-                    ),
-                  ),
-                Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          getImage(2);
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: 200,
-                          child: img2?Image.file(_image2 ):Image.asset(
-                            'assets/images/add.png',
-                            fit: BoxFit.fill,
-                          )
-                        ),
-                      ),
-                    ),
 
-              Visibility(visible: havewebimage1,
-                child: Padding(
-                          padding: const EdgeInsets.all(8.0),
 
-                            child: Container(
-                              width: double.infinity,
-                              height: 200,
-                              child:havewebimage1?Image.network(imagelinke[0]):Image.asset(
-                                'assets/images/product.png',
-                                fit: BoxFit.fill,
-                              )
+
+                  return Form(
+                      key: formkey,
+                      child: ListView(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _usernameController,
+                              onChanged: (v) {
+                                Userdata.username = v;
+                                usernamestring = v;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)
+                                      .translate('first_name') //'Your Name',
+                                  ,
+                                  prefixIcon: Icon(Icons.person),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20)))),
                             ),
-
-                        ),
-              ),
-
-
-                Visibility(visible:  havewebimage1,
-                  child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-
-                          child: Container(
-                            width: double.infinity,
-                            height: 200,
-                            child:   havewebimage1?Image.network(imagelinke[1]):Image.asset(
-                              'assets/images/product.png',
-                              fit: BoxFit.fill,
-                            )
                           ),
-
-                      ),
-                ),
-
-                  CupertinoButton(
-                    child: Text(
-                      AppLocalizations.of(context).translate('save'),
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () async {
-                      _saving = true;
-                      setState(() {});
-                      await save();
-                    },
-                  ),
-                  CupertinoButton(
-                    child: Text(
-                      'get my data',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {
-                      _getuserdata();
-
-
-                    },
-                  )
-               , CupertinoButton(
-                    child: Text(
-                      'Sing Out!',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {
-                    _auth.signOut().then((v){
-                      Navigator.of(context).pushReplacementNamed('MyHomePage');
-                    });
-
-
-                    },
-                  ) ],
-              )),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _userphonController,
+                              onChanged: (v) {
+                                Userdata.userphone = v;
+                                userphonestring = v;
+                              },
+                              keyboardType: TextInputType.phone,
+                              decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)
+                                      .translate('mobile'),
+                                  prefixIcon: Icon(Icons.phone),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20)))),
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CupertinoPickerWheelScroll()),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _useraddresController,
+                              onChanged: (v) {
+                                Userdata.useraddres = v;
+                                useraddres = v;
+                              },
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)
+                                      .translate('Address'),
+                                  prefixIcon: Icon(Icons.place),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20)))),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _DescribeController,
+                              onChanged: (v) {
+                                Userdata.Describe = v;
+                                Describe = v;
+                              },
+                              autocorrect: true,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              decoration: InputDecoration(
+                                  isDense: true,
+                                  hintText: AppLocalizations.of(context)
+                                      .translate('description'),
+                                  prefixIcon: Icon(Icons.info),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20)))),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onLongPress: () {
+                                //pop mnue dlate pic
+                              },
+                              onTap: () {
+                                getImage(1);
+                              },
+                              child: Container(
+                                  width: double.infinity,
+                                  height: 200,
+                                  child: img1
+                                      ? Image.file(_image1)
+                                      : Image.asset(
+                                          'assets/images/add.png',
+                                          fit: BoxFit.fill,
+                                        )),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () {
+                                getImage(2);
+                              },
+                              child: Container(
+                                  width: double.infinity,
+                                  height: 200,
+                                  child: img2
+                                      ? Image.file(_image2)
+                                      : Image.asset(
+                                          'assets/images/add.png',
+                                          fit: BoxFit.fill,
+                                        )),
+                            ),
+                          ),
+                          Visibility(
+                            visible: havewebimage1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                  width: double.infinity,
+                                  height: 200,
+                                  child: havewebimage1
+                                      ? Image.network(imagelinke[0])
+                                      : Image.asset(
+                                          'assets/images/product.png',
+                                          fit: BoxFit.fill,
+                                        )),
+                            ),
+                          ),
+                          Visibility(
+                            visible: havewebimage1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                  width: double.infinity,
+                                  height: 200,
+                                  child: havewebimage1
+                                      ? Image.network(imagelinke[1])
+                                      : Image.asset(
+                                          'assets/images/product.png',
+                                          fit: BoxFit.fill,
+                                        )),
+                            ),
+                          ),
+                          CupertinoButton(
+                            child: Text(
+                              AppLocalizations.of(context).translate('save'),
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            onPressed: () async {
+                              _saving = true;
+                              setState(() {});
+                              await save();
+                            },
+                          ),
+                          CupertinoButton(
+                            child: Text(
+                              'get my data',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            onPressed: () {
+                              _getuserdata();
+                            },
+                          ),
+                          CupertinoButton(
+                            child: Text(
+                              'Sing Out!',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            onPressed: () {
+                              _auth.signOut().then((v) {
+                                Navigator.of(context)
+                                    .pushReplacementNamed('MyHomePage');
+                              });
+                            },
+                          )
+                        ],
+                      ));
+                }),
+          ),
         ),
       ),
     );
@@ -286,60 +314,45 @@ TextEditingController _DescribeController=TextEditingController();
   Future getImage(int i) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
+    switch (i) {
+      case 1:
+        if (image != null) {
+          _image1 = image;
+          img1 = true;
+          listimage[0] = image;
+          setState(() {});
+        }
 
-      switch (i) {
-        case 1:
-          if(image!=null){
-            _image1 = image;
-            img1=true;
-            listimage[0]=image;
-            setState(() {
+        break;
 
-            });
-          }
+      case 2:
+        if (image != null) {
+          _image2 = image;
 
-          break;
+          img2 = true;
+          listimage[1] = image;
+          setState(() {});
+        }
 
-        case 2:
-          if(image!=null){ _image2 = image;
-
-          img2=true;
-          listimage[1]=image;
-          setState(() {
-
-          });}
-
-          break;
-
-
-      }
-
+        break;
+    }
   }
 
   void save() async {
-    if (formkey.currentState.validate()&&_image1!=null&&_image2!=null) {
-
+    if (formkey.currentState.validate() && _image1 != null && _image2 != null) {
       formkey.currentState.save();
-      StorageReference storageRef =
-      FirebaseStorage.instance.ref();
+      StorageReference storageRef = FirebaseStorage.instance.ref();
       for (int i = 0; i < imagelinke.length; i++) {
         if (imagelinke[i] != null) {
-
-           var desertRef2 = await storageRef.getStorage().getReferenceFromUrl(
-               imagelinke[i]);
-                      desertRef2.delete().whenComplete((){
-
-                      });
+          var desertRef2 =
+              await storageRef.getStorage().getReferenceFromUrl(imagelinke[i]);
+          desertRef2.delete().whenComplete(() {});
         }
       }
 
-
-
-
       for (int i = 0; i < listimage.length; i++) {
         if (listimage[i] != null) {
-
-          await uploadpic( i,listimage[i]);
+          await uploadpic(i, listimage[i]);
         }
       }
 
@@ -351,35 +364,34 @@ TextEditingController _DescribeController=TextEditingController();
           description: Describe,
           image1: imagelinke[0],
           image2: imagelinke[1],
-
           email: _currentUser.email);
-
 
 //        _firestore.collection("profile") .document(category).collection(_currentUser.uid) .add(dataType.tojson()).whenComplete(() {
 //        _saving = false;
 //        Navigator.of(context).popAndPushNamed('MyHomePage');
 //      });
-      _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).setData(dataType.tojson()).whenComplete((){
-        print("iam do");
+      _firestore
+          .collection('u')//.collection('users')
+          .document("proflie")
+          .collection('user')
+          .document(_currentUser.uid)
+          .setData(dataType.tojson())
+          .whenComplete(() {
+
         Navigator.of(context).pushNamed('MyHomePage');
         setState(() {
-          _saving=false;
+          _saving = false;
         });
       });
-
-
-    }else{
+    } else {
       _saving = false;
-      setState(() {
-
-      });
-      Scaffold
-          .of(context)
-          .showSnackBar(SnackBar(content: Text("Please enter all data and pictures")));
+      setState(() {});
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text("Please enter all data and pictures")));
     }
   }
 
-  Future uploadpic( i,imag) async {
+  Future uploadpic(i, imag) async {
     Random random = new Random();
     var now = new DateTime.now();
     var berlinWallFell = new DateTime.utc(1989, 11, 9);
@@ -397,8 +409,9 @@ TextEditingController _DescribeController=TextEditingController();
       print(e);
     });
     piclink = await taskSnapshot.ref.getDownloadURL();
-    imagelinke[i]=piclink;
+    imagelinke[i] = piclink;
   }
+
 //=============================================================================================
   Future<StorageReference> getReferenceFromUrl(String fullUrl) async {
     StorageReference storageRef = FirebaseStorage.instance.ref();
@@ -419,8 +432,8 @@ TextEditingController _DescribeController=TextEditingController();
           itemExtent: 50,
           onSelectedItemChanged: (item) {
             category = categoryscroll[item];
-            categoryindex=item;
-           print(categoryscroll[item]) ;
+            categoryindex = item;
+            print(categoryscroll[item]);
           },
           children: [
             Padding(
@@ -428,14 +441,17 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Container(height: 50,width: 50,
+                    Container(
+                      height: 50,
+                      width: 50,
                       child: Image.asset(
                         "assets/images/rest.png",
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    Text(AppLocalizations.of(context).translate('Restaurants'),style: TextStyle(fontSize:15),textAlign: TextAlign.center),
-
+                    Text(AppLocalizations.of(context).translate('Restaurants'),
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center),
                   ],
                 ),
                 height: 100,
@@ -446,13 +462,17 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Container(height: 50,width: 50,
+                    Container(
+                      height: 50,
+                      width: 50,
                       child: Image.asset(
-                       'assets/images/mm.png' ,
+                        'assets/images/mm.png',
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    Text(AppLocalizations.of(context).translate('Personal'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
+                    Text(AppLocalizations.of(context).translate('Personal'),
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -463,13 +483,19 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Container(height: 50,width: 50,
+                    Container(
+                      height: 50,
+                      width: 50,
                       child: Image.asset(
                         'assets/images/dog.png',
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    Text(AppLocalizations.of(context).translate('Animals'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center,)
+                    Text(
+                      AppLocalizations.of(context).translate('Animals'),
+                      style: TextStyle(fontSize: 15),
+                      textAlign: TextAlign.center,
+                    )
                   ],
                 ),
                 height: 100,
@@ -480,13 +506,17 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Container(height: 50,width: 50,
+                    Container(
+                      height: 50,
+                      width: 50,
                       child: Image.asset(
                         'assets/images/carr.jpg',
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    Text(AppLocalizations.of(context).translate('Car'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
+                    Text(AppLocalizations.of(context).translate('Car'),
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -497,13 +527,17 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Container(height: 50,width: 50,
+                    Container(
+                      height: 50,
+                      width: 50,
                       child: Image.asset(
                         'assets/images/shopping.png',
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    Text(AppLocalizations.of(context).translate('Shops'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
+                    Text(AppLocalizations.of(context).translate('Shops'),
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -514,13 +548,17 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Container(height: 50,width: 50,
+                    Container(
+                      height: 50,
+                      width: 50,
                       child: Image.asset(
                         'assets/images/poste.png',
                         fit: BoxFit.fitHeight,
                       ),
                     ),
-                    Text(AppLocalizations.of(context).translate('Home'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
+                    Text(AppLocalizations.of(context).translate('Home'),
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -531,13 +569,14 @@ TextEditingController _DescribeController=TextEditingController();
               child: Container(
                 child: Row(
                   children: <Widget>[
-                    Container(height: 50,width: 50,
-                      child: Image.asset(
-                        'assets/images/hook.png'
-
-                      ),
+                    Container(
+                      height: 50,
+                      width: 50,
+                      child: Image.asset('assets/images/hook.png'),
                     ),
-                    Text(AppLocalizations.of(context).translate('Building'),style: TextStyle(fontSize: 15),textAlign: TextAlign.center)
+                    Text(AppLocalizations.of(context).translate('Building'),
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center)
                   ],
                 ),
                 height: 100,
@@ -547,19 +586,16 @@ TextEditingController _DescribeController=TextEditingController();
     );
   }
 
-
-  void  CurrentUser() async {
+  void CurrentUser() async {
     _currentUser = await _auth.currentUser();
 
     _currentUser?.getIdToken(refresh: true);
     _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
       setState(() {
         _currentUser = user;
-
       });
     });
   }
-
 
 //  _savedatalocal() async {
 //    SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -574,78 +610,63 @@ TextEditingController _DescribeController=TextEditingController();
 //
 //
 //  }
-  _getuserdata()async{
-    if(_currentUser.uid!=null){
+  _getuserdata() async {
+    if (_currentUser.uid != null) {
+      await _firestore
+          .collection('users')
+          .document("proflie")
+          .collection('user')
+          .document(_currentUser.uid)
+          .get()
+          .then((v) {
+        if (!v.data.isEmpty) {
 
+          _userhaveprofile = true;
+          DataTypeG data = DataTypeG.fromjson(v.data);
+          _usernameController.text =
+              data.name ?? AppLocalizations.of(context).translate('first_name');
+          _userphonController.text =
+              data.mobile ?? AppLocalizations.of(context).translate('mobile');
+          _useraddresController.text =
+              data.Address ?? AppLocalizations.of(context).translate('Address');
+          _DescribeController.text = data.Address ??
+              AppLocalizations.of(context).translate('description');
 
-     await _firestore.collection('users').document("proflie").collection('user').document( _currentUser.uid ).get().then((v){
-        if(!v.data.isEmpty){
-          _userhaveprofile=true;
-          DataTypeG data=DataTypeG.fromjson(v.data);
-          _usernameController.text= data.name ??  AppLocalizations.of(context)
-              .translate('first_name');
-          _userphonController.text=data.mobile ??  AppLocalizations.of(context).translate('mobile');
-          _useraddresController.text=data.Address ?? AppLocalizations.of(context).translate('Address');
-          _DescribeController.text=data.Address ?? AppLocalizations.of(context)
-              .translate('description');
-
-
-
-          if(data.image1!=null){
-            imagelinke[0]=data.image1;
-            havewebimage1=true;
-
+          if (data.image1 != null) {
+            imagelinke[0] = data.image1;
+            havewebimage1 = true;
           }
-          if(data.image2!=null){
-            imagelinke[1]=data.image2;
-        havewebimage2=true;
+          if (data.image2 != null) {
+            imagelinke[1] = data.image2;
+            havewebimage2 = true;
           }
-
         }
-
-
-
-      }).catchError((e){
-       Scaffold
-           .of(context)
-           .showSnackBar(SnackBar(content: Text('you not add data to your profile')));
-     });
-
-
-    }else{
-      _userhaveprofile=false;
+      }).catchError((e) {
+        Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text('you not add data to your profile')));
+      });
+    } else {
+      _userhaveprofile = false;
     }
 
-    setState(() {
-
-    });
+    setState(() {});
   }
-  Widget imagefromweb(i,String url){
 
-
-    if(url!=null)
-      {
-        return Container(height: 100,child: Image.network(url),);
-
-
-
-
-      }else{
-      if( i != null){
-        return  Image.file(i);
-
-
-      }else{
-        return  Image.asset(
-    'assets/images/add.png',
-    fit: BoxFit.fill,
-    );
-
+  Widget imagefromweb(i, String url) {
+    if (url != null) {
+      return Container(
+        height: 100,
+        child: Image.network(url),
+      );
+    } else {
+      if (i != null) {
+        return Image.file(i);
+      } else {
+        return Image.asset(
+          'assets/images/add.png',
+          fit: BoxFit.fill,
+        );
       }
-
-
-
     }
-
   }
 }

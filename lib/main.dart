@@ -156,6 +156,7 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void dispose() {
     _listener.cancel();
+    super.dispose();
   }
 
   @override

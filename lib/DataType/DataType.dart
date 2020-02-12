@@ -27,6 +27,11 @@ class DataTypeG {
   }
 
   DataTypeG.fromjson(data) {
+    if(data['name']==null)
+      {
+        print( 'uuuuuuuuuuuuuuuuuuuuuuuuuuuu');
+      }
+
     name=data['name'];
     mobile=data['mobile'];
     category=data['category'];

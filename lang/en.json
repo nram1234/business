@@ -1,16 +1,17 @@
 {
 
-  "first_name": " Name",
-  "mobile": "Mobile Number",
-  "Address": "Address",
-  "description": "description",
-  "save": "save",
+  "first_name": "اسمك",
+  "mobile": "رقم الموبيل",
+  "Address": "العنوان",
+  "description": "تفصيل",
+  "save": "حفظ",
 
-  "Building": "Building and construction",
-  "Home": "Home Services",
-  "Personal": "Personal Care",
-  "Animals": "Animals",
-  "Car": "Car service",
-  "Shops": "Shops",
-  "Restaurants":  "Restaurants and cafes"
+
+  "Building": "بناء وتشييد",
+  "Home": "خدمات منزلية",
+  "Personal": "عنايه شخصية",
+  "Animals": "حيوانات",
+  "Car": "خدمة سيارات",
+  "Shops": "محلات",
+  "Restaurants":  "مطاعم وكافيهات و اكل بيتي"
 }
